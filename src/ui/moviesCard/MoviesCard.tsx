@@ -37,7 +37,7 @@ export default function MoviesCard({
               <h1>Loading...</h1>
             ) : (
               data.map((item: MediaType, idx: number) => (
-                <Card key={`${selected}-${item.id}-${idx}`} movie={item} selected={selected} />
+                <Card key={`${selected}-${item?.id}-${idx}`} movie={item} selected={selected} />
               ))
             )}
           </div>

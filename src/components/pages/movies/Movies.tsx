@@ -43,7 +43,7 @@ export default function Movies() {
             {
               <MoviesCard
                 isLoading={isLoading}
-                data={movies}
+                data={movies ?? []}
                 title="Movies"
                 toggle="day | week"
                 selected="movie" // кош
