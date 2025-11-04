@@ -91,8 +91,8 @@ p {
 }
 button {
   padding: 12px 18px;
-  min-width: 90px;
-  min-height: 40px;
+  /* min-width: 90px;
+  min-height: 40px; */
   border-radius: var(--border-radius);
   border: none;
   font-size: 1.04rem;

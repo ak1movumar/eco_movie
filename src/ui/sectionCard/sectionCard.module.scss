@@ -23,11 +23,70 @@
       //   display: none;
       // }
       // -ms-overflow-style: none;
-      .btn-next{
+      .btn-next {
         position: absolute;
         top: 160;
         right: -90;
         z-index: 100;
+      }
+    }
+  }
+ /* ✅ Адаптация */
+  @media (max-width: 1024px) {
+    .mainContainer {
+      .top h3 {
+        font-size: 22px;
+      }
+      .list {
+        .btn-prev,
+        .btn-next {
+          width: 40px;
+          height: 40px;
+          font-size: 16px;
+          left: -40px;
+          right: -40px;
+        }
+        .btn-next{
+          top: 50px;
+          left: 60px;
+
+        }
+      }
+    }
+  }
+
+  @media (max-width: 768px) {
+    .mainContainer {
+      .top h3 {
+        font-size: 20px;
+      }
+      .list {
+        .btn-prev,
+        .btn-next {
+          width: 35px;
+          height: 35px;
+          font-size: 14px;
+          left: -25px;
+          right: -25px;
+        }
+      }
+    }
+  }
+
+  @media (max-width: 480px) {
+    .mainContainer {
+      .top h3 {
+        font-size: 18px;
+      }
+      .list {
+        .btn-prev,
+        .btn-next {
+          width: 30px;
+          height: 30px;
+          font-size: 12px;
+          left: -10px;
+          right: -10px;
+        }
       }
     }
   }

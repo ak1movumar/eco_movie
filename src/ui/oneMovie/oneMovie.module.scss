@@ -149,3 +149,51 @@
   border: 0;
 }
 
+@media (max-width: 1024px) {
+  .backdrop img {
+    height: 70vh;
+  }
+  .mainContent {
+    margin-top: -420px;
+    gap: 20px;
+  }
+  .poster img {
+    width: 240px;
+  }
+}
+
+@media (max-width: 768px) {
+  .backdrop img {
+    height: 60vh;
+  }
+  .mainContent {
+    margin-top: -360px;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  .poster img {
+    width: 220px;
+  }
+  .details h1 {
+    font-size: 1.6rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .backdrop img {
+    height: 50vh;
+  }
+  .mainContent {
+    margin-top: -260px;
+    padding: 0 8px;
+  }
+  .poster img {
+    width: 180px;
+  }
+  .genres span {
+    font-size: 0.8rem;
+    padding: 4px 10px;
+  }
+}
+
