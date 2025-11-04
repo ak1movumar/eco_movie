@@ -5,20 +5,25 @@
   justify-content: space-between;
   border-radius: 12px;
   gap: 20px;
-  // width: 100%;
   width: 200px;
   height: 400px;
   position: relative;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
+  overflow: hidden;
+  background-color: #111;
+
   img {
-    // width: 100%;
-    border-radius: 10px;
+    width: 100%;
     height: 400px;
+    object-fit: cover;
+    border-radius: 10px;
   }
+
   &:hover {
     transform: scale(1.05);
     box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
   }
+
   .scale {
     display: flex;
     align-items: center;
@@ -31,7 +36,9 @@
     position: absolute;
     bottom: 66px;
     left: 10px;
+    font-weight: 600;
   }
+
   .genres {
     position: absolute;
     bottom: 90px;
@@ -39,20 +46,127 @@
     display: flex;
     align-items: center;
     gap: 5px;
+    flex-wrap: wrap;
+
     span {
       background: #da2f68;
       padding: 5px 8px;
       border-radius: 6px;
       font-size: 11px;
       font-weight: 300;
+      color: white;
     }
   }
+
   .title {
     display: flex;
     flex-direction: column;
     gap: 5px;
+
+    h4 {
+      font-size: 16px;
+      color: #fff;
+      font-weight: 600;
+    }
+
     p {
       color: #ffffff67;
+      font-size: 13px;
+    }
+  }
+
+  /* 📱 Адаптация */
+  @media (max-width: 1024px) {
+    width: 180px;
+    height: 350px;
+
+    img {
+      height: 350px;
+    }
+
+    .scale {
+      width: 40px;
+      height: 40px;
+      bottom: 60px;
+    }
+
+    .genres span {
+      font-size: 10px;
+      padding: 4px 6px;
+    }
+
+    .title h4 {
+      font-size: 15px;
+    }
+  }
+
+  @media (max-width: 768px) {
+    width: 150px;
+    height: 300px;
+
+    img {
+      height: 300px;
+    }
+
+    .scale {
+      width: 38px;
+      height: 38px;
+      bottom: 50px;
+    }
+
+    .genres {
+      bottom: 75px;
+      right: 3px;
+      gap: 3px;
+    }
+
+    .genres span {
+      font-size: 9px;
+      padding: 3px 5px;
+    }
+
+    .title h4 {
+      font-size: 14px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    width: 100px;
+    height: 200px;
+
+    img {
+      width: 70px;
+      height: 170px;
+    }
+
+    .scale {
+      width: 32px;
+      height: 32px;
+      bottom: 40px;
+    }
+
+    .genres {
+      bottom: 60px;
+      gap: 2px;
+    }
+
+    .genres span {
+      font-size: 8px;
+      padding: 2px 4px;
+    }
+
+    .title h4 {
+      font-size: 12px;
+    }
+
+    .title p {
+      font-size: 11px;
+    }
+
+    /* 📴 Hover эффект мобайлда өчөт */
+    &:hover {
+      transform: none;
+      box-shadow: none;
     }
   }
 }

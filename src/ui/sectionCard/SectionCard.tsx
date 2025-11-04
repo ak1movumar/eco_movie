@@ -48,8 +48,16 @@ export default function SectionCard({
                   nextEl: ".btn-next",
                   prevEl: ".btn-prev",
                 }}
-                spaceBetween={50}
+                spaceBetween={16}
                 slidesPerView={5}
+                breakpoints={{
+                  1400: { slidesPerView: 6, spaceBetween: 20 },
+                  1200: { slidesPerView: 5, spaceBetween: 18 },
+                  1024: { slidesPerView: 4, spaceBetween: 16 },
+                  768: { slidesPerView: 3, spaceBetween: 14 },
+                  560: { slidesPerView: 2, spaceBetween: 12 },
+                  0: { slidesPerView: 2, spaceBetween: 10 },
+                }}
                 // onSlideChange={() => console.log("slide change")}
                 // onSwiper={(swiper) => console.log(swiper)}
               >
