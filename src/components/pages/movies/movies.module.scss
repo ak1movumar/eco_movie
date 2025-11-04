@@ -1,0 +1,26 @@
+.container{
+    padding-block: 100px;
+    .mainContainer{
+        .top{
+            display: flex;
+            justify-content: space-between;
+            .selects{
+                display: flex;
+                gap: 15px;
+                select{
+                    width: 200px;
+                    height: 50px;
+                    padding: 8px 15px;
+                    border-radius: 15px;
+                    background: rgb(52, 52, 212);
+                    color: white;
+                    border: none;
+                }
+            }
+        }
+        .movies{
+            display: flex;
+            gap: 20px;
+        }
+    }
+}

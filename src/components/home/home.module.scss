@@ -1,0 +1,115 @@
+.container {
+  padding-block: 100px;
+  min-width: 100%;
+  min-height: 100vh;
+
+  background-image: linear-gradient(
+      120deg,
+      var(--color-bg-overlay, #090e1a77) 30%,
+      transparent 100%
+    ),
+    var(
+      --bg-image,
+      url("https://image.tmdb.org/t/p/w500/rMCTzLujqBbdc50D6fxrJgACDDV.jpg")
+    );
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  .mainContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-width: 100%;
+    gap: 32px;
+    text-align: center;
+    span {
+      font-size: 80px;
+      min-height: 200px;
+      font-weight: 700;
+      text-shadow: 4px 4px 4px blueviolet;
+    }
+    h1 {
+      color: var(--color-accent2, #da2f68);
+      margin-bottom: 0;
+      border: none;
+      animation: none;
+    }
+    p {
+      max-width: 550px;
+      color: #e2e2e2;
+    }
+    .inputs {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-width: 90%;
+      padding: 0;
+      input {
+        width: 100%;
+        height: 74px;
+        padding: 0 18px;
+        border-radius: 20px 0 0 20px;
+        background: #131a2c;
+        color: #fff;
+        border: none;
+        outline: none;
+        &:focus {
+          box-shadow: 0 0 0 2px var(--color-accent2, #da2f68);
+        }
+      }
+      button {
+        width: 100px;
+        height: 74px;
+        padding: 0 18px;
+        border-radius: 0 20px 20px 0;
+        background: linear-gradient(98.37deg, #b509bd 0.99%, #da2f68 100%);
+        color: #fff;
+        transition: background 0.2s, transform 0.15s;
+        cursor: pointer;
+        &:hover {
+          background: linear-gradient(98.37deg, #da2f68 0.99%, #b509bd 100%);
+          transform: scale(1.055);
+        }
+      }
+    }
+  }
+  @media (max-width: 900px) {
+    padding: 42px 0 18px;
+    .mainContainer {
+      span {
+        font-size: 1.5rem;
+      }
+    }
+    .movies {
+      grid-template-columns: repeat(auto-fit, minmax(134px, 1fr));
+      gap: 13px;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .mainContainer {
+      gap: 18px;
+      span {
+        font-size:2.3rem;
+      }
+      p {
+        max-width: 95vw;
+      }
+      .inputs {
+        input,
+        button {
+          height: 38px;
+          padding: 0 8px;
+          font-size: 0.99rem;
+        }
+      }
+    }
+    .movies {
+      gap: 7px;
+    }
+  }
+}
