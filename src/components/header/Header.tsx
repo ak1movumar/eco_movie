@@ -6,7 +6,16 @@ import { useRouter } from "next/navigation";
 
 const Header = () => {
   const [isModal, setIsModal] = useState(false);
-  console.log(isModal);
+  const [searchTerm, setSearchTerm] = useState("");
+  // console.log(isModal);
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    const query = searchTerm.trim();
+    if (query) {
+      router.push(`/searchPage?query=${encodeURIComponent(query)}`);
+    }
+  };
 
   const router = useRouter();
   return (
@@ -22,7 +31,7 @@ const Header = () => {
           </div>
           <div className={scss.right_header}>
             <a onClick={() => router.push("/movies")}>Movies</a>
-            <a onClick={() => router.push("/tv")}>TV Shows</a>
+            <a onClick={() => router.push("/tvs")}>TV Shows</a>
             <span onClick={() => setIsModal(!isModal)}>
               <CiSearch />
             </span>
@@ -31,17 +40,20 @@ const Header = () => {
                 className={scss.modalOverlay}
                 onClick={() => setIsModal(false)}
               >
-                <div
-                  className={scss.modalContent}
-                  onClick={(e) => e.stopPropagation()}
+                <form
+                  className={scss.modalContent} 
+                  onClick={(e) => e.stopPropagation()} onSubmit={handleSearch}
                 >
                   <input
                     type="text"
                     placeholder="Search movies or TV shows..."
                     className={scss.modalInput}
+                    onChange={(e) => setSearchTerm(e.target.value)}
                   />
+                  {/* <button type="submit">Search</button> */}
+                  <button type="submit" className={scss.searchButton}><CiSearch /></button>
                   <button onClick={() => setIsModal(false)}>Close</button>{" "}
-                </div>
+                </form>
               </div>
             )}
           </div>

@@ -2,10 +2,53 @@
 import { useReadAllMovies } from "@/hooks/readAllMovies/useReadAllMovies";
 import scss from "./movies.module.scss";
 import MoviesCard from "@/ui/moviesCard/MoviesCard";
+import { useMemo, useState } from "react";
+import { CircularProgressbar } from "react-circular-progressbar";
 
 export default function Movies() {
   const { data: movies, isLoading } = useReadAllMovies();
-  console.log(movies);
+  // console.log(movies);
+
+  const [selectedGenre, setSelectedGenre] = useState<string>("");
+  const [sortBy, setSortBy] = useState<string>("");
+
+  const genresMap: Record<number, string> = {
+    28: "Action",
+    12: "Adventure",
+    16: "Animation",
+    35: "Comedy",
+    80: "Crime",
+    99: "Documentary",
+    18: "Drama",
+    10751: "Family",
+  };
+
+  const filteredAndSortedMovies = useMemo(() => {
+    if (!movies) return [];
+
+    let result = [...movies];
+
+    if (selectedGenre) {
+      result = result.filter((item) =>
+        item.genre_ids?.some(
+          (id: number) =>
+            genresMap[id]?.toLowerCase() === selectedGenre.toLowerCase()
+        )
+      );
+    }
+
+    if (sortBy === "rating") {
+      result.sort((a, b) => b.vote_average - a.vote_average);
+    } else if (sortBy === "date") {
+      result.sort(
+        (a, b) =>
+          new Date(b.first_air_date).getTime() -
+          new Date(a.first_air_date).getTime()
+      );
+    }
+
+    return result;
+  }, [movies, selectedGenre, sortBy]);
 
   return (
     <div className={scss.container}>
@@ -14,7 +57,10 @@ export default function Movies() {
           <div className={scss.top}>
             <h2>Explore Movies</h2>
             <div className={scss.selects}>
-              <select>
+              <select
+                value={selectedGenre}
+                onChange={(e) => setSelectedGenre(e.target.value)}
+              >
                 <option value="">Select genres</option>
                 <option value="action">Action</option>
                 <option value="adventure">Adventure</option>
@@ -25,17 +71,13 @@ export default function Movies() {
                 <option value="drama">Drama</option>
                 <option value="family">Family</option>
               </select>
-              <select>
-                <option value="">Sort by</option>
-                <option value="action">Action</option>
-                <option value="action">Action</option>
-                <option value="action">Action</option>
-                <option value="action">Action</option>
-                <option value="action">Action</option>
-                <option value="action">Action</option>
-                <option value="action">Action</option>
-                <option value="action">Action</option>
-                <option value="action">Action</option>
+              <select
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value)}
+              >
+                <option value="">Default</option>
+                <option value="rating">Sort by Rating</option>
+                <option value="date">Sort by Date</option>
               </select>
             </div>
           </div>
@@ -43,10 +85,10 @@ export default function Movies() {
             {
               <MoviesCard
                 isLoading={isLoading}
-                data={movies ?? []}
+                data={filteredAndSortedMovies ?? []}
                 title="Movies"
                 toggle="day | week"
-                selected="movie" // кош
+                selected="movie"
               />
             }
           </div>

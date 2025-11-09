@@ -1,4 +1,4 @@
-"use client"; // бул керек
+"use client"; 
 
 import OneMovie from "@/ui/oneMovie/OneMovie";
 

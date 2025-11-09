@@ -1,15 +1,15 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import { useOneMovie } from "@/hooks/oneMovie/useOneMovie";
+import { useOneTv } from "@/hooks/oneTv/useOneTv";
 import { PiPlayCircle } from "react-icons/pi";
-import scss from "./oneMovie.module.scss";
+import scss from "../oneMovie/oneMovie.module.scss";
 import { useEffect, useState, useCallback } from "react";
 import CardTwo from "../cardtwo/CardTwo";
 
-export default function OneMovie() {
+export default function OneTv() {
   const { id } = useParams();
-  const { data, isLoading, isError } = useOneMovie(id as string);
+  const { data, isLoading, isError } = useOneTv(id as string);
   const [activeVideoKey, setActiveVideoKey] = useState<string | null>(null);
 
   const closeModal = useCallback(() => setActiveVideoKey(null), []);
@@ -32,17 +32,19 @@ export default function OneMovie() {
   }, [activeVideoKey, closeModal]);
 
   if (isLoading) return <h2 className={scss.loading}>Loading...</h2>;
-  if (isError || !data) return <h2 className={scss.error}>Movie not found</h2>;
+  if (isError || !data) return <h2 className={scss.error}>TV Show not found</h2>;
 
-  const { movie, credits, videos, similar, recommendations } = data;
-  const trailer = videos.find((item: any) => item.type === "Trailer" && item.site === "YouTube");
+  const { tv, credits, videos, similar, recommendations } = data;
+  const trailer = videos.find(
+    (item: any) => item.type === "Trailer" && item.site === "YouTube"
+  );
 
   return (
     <section className={scss.container}>
       <div className={scss.backdrop}>
         <img
-          src={`https://image.tmdb.org/t/p/original${movie.backdrop_path}`}
-          alt={movie.title}
+          src={`https://image.tmdb.org/t/p/original${tv.backdrop_path}`}
+          alt={tv.name}
         />
       </div>
 
@@ -50,36 +52,41 @@ export default function OneMovie() {
         <div className={scss.mainContent}>
           <div className={scss.poster}>
             <img
-              src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-              alt={movie.title}
+              src={`https://image.tmdb.org/t/p/w500${tv.poster_path}`}
+              alt={tv.name}
             />
           </div>
 
           <div className={scss.details}>
             <h1>
-              {movie.title} <span>({movie.release_date?.split("-")[0]})</span>
+              {tv.name} <span>({tv.first_air_date?.split("-")[0]})</span>
             </h1>
 
             <div className={scss.genres}>
-              {movie.genres?.map((item: any) => (
+              {tv.genres?.map((item: any) => (
                 <span key={item.id}>{item.name}</span>
               ))}
             </div>
 
             {trailer && (
               <div>
-                <p>Rating: {movie.vote_average.toFixed(1)}</p>
-                <button type="button" className={scss.trailer} onClick={() => openModal(trailer.key)}>
+                <p>Rating: {tv.vote_average.toFixed(1)}</p>
+                <button
+                  type="button"
+                  className={scss.trailer}
+                  onClick={() => openModal(trailer.key)}
+                >
                   <PiPlayCircle size={30} /> Watch Trailer
                 </button>
               </div>
             )}
-            <p className={scss.overview}>{movie.overview}</p>
+            <p className={scss.overview}>{tv.overview}</p>
 
             <div className={scss.extraInfo}>
-              <p>Status: {movie.status}</p>
-              <p>Release Date: {movie.release_date}</p>
-              <p>Runtime: {movie.runtime} min</p>
+              <p>Status: {tv.status}</p>
+              <p>First Air Date: {tv.first_air_date}</p>
+              <p>Episodes: {tv.number_of_episodes}</p>
+              <p>Seasons: {tv.number_of_seasons}</p>
             </div>
           </div>
         </div>
@@ -104,29 +111,12 @@ export default function OneMovie() {
           </div>
         </div>
 
-        {/* {videos?.length > 0 && (
-          <div className={scss.section}>
-            <h2>Official Videos</h2>
-            <div className={scss.videos}>
-              {videos.slice(0, 6).map((item: any) => (
-                <div key={item.id} className={scss.videoItem} onClick={() => item.site === "YouTube" && openModal(item.key)}>
-                  <img
-                    src={item.site === "YouTube" ? `https://img.youtube.com/vi/${item.key}/hqdefault.jpg` : "/no-image.jpg"}
-                    alt={item.name}
-                  />
-                  <p>{item.name}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        )} */}
-
         {similar?.length > 0 && (
           <div className={scss.section}>
-            <h2>Similar Movies</h2>
+            <h2>Similar TV Shows</h2>
             <div className={scss.gridCards}>
               {similar.map((item: any) => (
-                <CardTwo key={`similar-${item.id}`} movie={item} selected="movie" />
+                <CardTwo key={`similar-${item.id}`} movie={item} selected="tv" />
               ))}
             </div>
           </div>
@@ -137,7 +127,7 @@ export default function OneMovie() {
             <h2>Recommendations</h2>
             <div className={scss.gridCards}>
               {recommendations.map((item: any) => (
-                <CardTwo key={`rec-${item.id}`} movie={item} selected="movie" />
+                <CardTwo key={`rec-${item.id}`} movie={item} selected="tv" />
               ))}
             </div>
           </div>
@@ -146,8 +136,15 @@ export default function OneMovie() {
 
       {activeVideoKey && (
         <div className={scss.modalOverlay} onClick={closeModal}>
-          <div className={scss.modalContent} onClick={(e) => e.stopPropagation()}>
-            <button className={scss.modalClose} onClick={closeModal} aria-label="Close trailer">
+          <div
+            className={scss.modalContent}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              className={scss.modalClose}
+              onClick={closeModal}
+              aria-label="Close trailer"
+            >
               ✕
             </button>
             <div className={scss.videoWrapper}>

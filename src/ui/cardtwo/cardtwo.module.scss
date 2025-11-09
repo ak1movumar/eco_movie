@@ -5,16 +5,17 @@
   justify-content: space-between;
   border-radius: 12px;
   gap: 20px;
-  width: 200px;
-  height: 400px;
+  width: 20%;
+  min-width: 200px;
+  height: 450px;
   position: relative;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   overflow: hidden;
-  background-color: #111;
+  // background-color: #111;
 
   img {
     width: 100%;
-    height: 400px;
+    height: 380px;
     object-fit: cover;
     border-radius: 10px;
   }
@@ -31,7 +32,7 @@
     width: 45px;
     height: 45px;
     background: white;
-    color: rgb(86, 86, 145);
+    color: black;
     border-radius: 50%;
     position: absolute;
     bottom: 66px;
@@ -74,10 +75,8 @@
       font-size: 13px;
     }
   }
-
-  /* 📱 Адаптация */
   @media (max-width: 1024px) {
-    width: 180px;
+    min-width: 180px;
     height: 350px;
 
     img {
@@ -101,7 +100,7 @@
   }
 
   @media (max-width: 768px) {
-    width: 150px;
+    min-width: 140px;
     height: 300px;
 
     img {
@@ -131,13 +130,13 @@
   }
 
   @media (max-width: 480px) {
-    width: 100px;
+    min-width: 105px;
     height: 200px;
 
-    img {
-      width: 70px;
-      height: 170px;
-    }
+    // img {
+    //   width: 70px;
+    //   height: 170px;
+    // }
 
     .scale {
       width: 32px;

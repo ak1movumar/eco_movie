@@ -7,11 +7,10 @@ import MoviesCard from "@/ui/moviesCard/MoviesCard";
 export default function AllTv() {
   const { data: tv, isLoading } = useReadAllTv();
 
-  // состояние фильтра и сортировки
+
   const [selectedGenre, setSelectedGenre] = useState<string>("");
   const [sortBy, setSortBy] = useState<string>("");
 
-  // Маппинг жанров (примерный, можно расширить)
   const genresMap: Record<number, string> = {
     28: "Action",
     12: "Adventure",
@@ -23,13 +22,12 @@ export default function AllTv() {
     10751: "Family",
   };
 
-  // фильтрация и сортировка данных
   const filteredAndSortedTv = useMemo(() => {
     if (!tv) return [];
 
     let result = [...tv];
 
-    // фильтр по жанру
+
     if (selectedGenre) {
       result = result.filter((item) =>
         item.genre_ids?.some(
@@ -39,7 +37,7 @@ export default function AllTv() {
       );
     }
 
-    // сортировка
+ 
     if (sortBy === "rating") {
       result.sort((a, b) => b.vote_average - a.vote_average);
     } else if (sortBy === "date") {
