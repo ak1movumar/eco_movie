@@ -78,7 +78,7 @@
         border-radius: 8px;
         width: 100%;
         max-width: 90%;
-        button{
+        button {
           border-radius: 0 10px 10px 0;
           height: 70px;
         }
@@ -89,23 +89,43 @@
         height: 70px;
         padding: 15px;
         // margin-bottom: 10px;
+        input {
+          position: relative;
+        }
+      }
+      .searchButton {
+        font-size: 30px;
+        background: none;
+       button{
+         padding: 1px 1px;
+        width: 2px;
+        height: 2px;
+        width: 0;
+        height: 0;
+        background: none;
+        font-size: 30px;
+        position: absolute;
+        top: 90;
+        right: 200;
+       }
+        
       }
 
       button {
         background: var(--color-btn-bg, #b509bd);
-        min-width: 90px;
+        // min-width: 90px;
         border-radius: var(--border-radius, 12px);
         border: none;
-        padding: 9px 18px;
+        // padding: 9px 18px;
         color: #fff;
         font-size: 1rem;
         font-weight: 600;
         cursor: pointer;
         transition: background 0.2s, transform 0.2s;
-        &:hover {
-          background: var(--color-btn-hover, #da2f68);
-          transform: scale(1.06);
-        }
+        // &:hover {
+        //   background: var(--color-btn-hover, #da2f68);
+        //   transform: scale(1.06);
+        // }
       }
     }
   }

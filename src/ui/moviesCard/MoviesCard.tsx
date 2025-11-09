@@ -1,5 +1,5 @@
 "use client";
-import Card from "../card/Card";
+import CardTwo from "../cardtwo/CardTwo";
 import scss from "./moviesCard.module.scss";
 
 interface MediaType {
@@ -17,7 +17,7 @@ interface MoviesCardProps {
   toggle: string;
   isLoading: boolean;
   data: MediaType[];
-  selected: "movie" | "tv"; // параметр
+  selected: "movie" | "tv"; 
 }
 
 
@@ -26,7 +26,7 @@ export default function MoviesCard({
   toggle,
   data,
   isLoading,
-  selected,// колдоном
+  selected,
 }: MoviesCardProps) {
   return (
     <div className={scss.container}>
@@ -37,7 +37,7 @@ export default function MoviesCard({
               <h1>Loading...</h1>
             ) : (
               data.map((item: MediaType, idx: number) => (
-                <Card key={`${selected}-${item?.id}-${idx}`} movie={item} selected={selected} />
+                <CardTwo key={`${selected}-${item?.id}-${idx}`} movie={item} selected={selected} />
               ))
             )}
           </div>

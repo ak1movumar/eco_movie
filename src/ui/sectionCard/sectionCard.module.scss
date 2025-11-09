@@ -10,6 +10,33 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
+      .toggle {
+        display: flex;
+        background: #ffffff1a;
+        border-radius: 30px;
+        overflow: hidden;
+        padding: 4px;
+
+        button {
+          background: transparent;
+          border: none;
+          color: #fff;
+          padding: 6px 16px;
+          font-size: 14px;
+          border-radius: 30px;
+          cursor: pointer;
+          transition: all 5s ease;
+
+          &:hover {
+            opacity: 0.8;
+          }
+
+          &.active {
+            background: linear-gradient(90deg, #d946ef, #8b5cf6);
+            color: #fff;
+          }
+        }
+      }
     }
     .list {
       position: relative;
@@ -17,21 +44,19 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      // overflow-x: auto;
-      // scrollbar-width: none;
-      // &::-webkit-scrollbar{
-      //   display: none;
-      // }
-      // -ms-overflow-style: none;
+      button {
+        display: flex;
+        align-items: center;
+      }
       .btn-next {
         position: absolute;
         top: 160;
-        right: -90;
+        right: 0;
         z-index: 100;
       }
     }
   }
- /* ✅ Адаптация */
+
   @media (max-width: 1024px) {
     .mainContainer {
       .top h3 {
@@ -46,10 +71,9 @@
           left: -40px;
           right: -40px;
         }
-        .btn-next{
+        .btn-next {
           top: 50px;
           left: 60px;
-
         }
       }
     }

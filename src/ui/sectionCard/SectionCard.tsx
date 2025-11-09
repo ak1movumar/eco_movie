@@ -30,9 +30,20 @@ export default function SectionCard({
           <div className={scss.top}>
             <h3>{title}</h3>
             {onToggle && (
-              <button onClick={onToggle}>
-                {toggle === "day" ? "week" : "day"}
-              </button>
+              <div className={scss.toggle}>
+                <button
+                  className={toggle === "day" ? scss.active : ""}
+                  onClick={onToggle}
+                >
+                  Day
+                </button>
+                <button
+                  className={toggle === "week" ? scss.active : ""}
+                  onClick={onToggle}
+                >
+                  Week
+                </button>
+              </div>
             )}
           </div>
 
@@ -43,7 +54,7 @@ export default function SectionCard({
               <h1>Loading...</h1>
             ) : (
               <Swiper
-                modules={[Navigation ]}
+                modules={[Navigation]}
                 navigation={{
                   nextEl: ".btn-next",
                   prevEl: ".btn-prev",

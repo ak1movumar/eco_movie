@@ -1,6 +1,6 @@
 "use client";
 import { useRouter } from "next/navigation";
-import scss from "./card.module.scss";
+import scss from "./cardtwo.module.scss";
 import { buildStyles, CircularProgressbar } from "react-circular-progressbar";
 
 interface ICard {
@@ -19,13 +19,11 @@ interface CardProps {
   selected: "movie" | "tv";
 }
 
-const Card = ({ movie, selected }: CardProps) => {
+const CardTwo = ({ movie, selected }: CardProps) => {
   const { push } = useRouter();
 
-  // Movie же TV аты
   const displayTitle = movie.title || movie.name || "Untitled";
 
-  // Movie же TV дата
   const displayDate = movie.release_date || movie.first_air_date || "N/A";
 
   return (
@@ -33,7 +31,7 @@ const Card = ({ movie, selected }: CardProps) => {
       <img
         src={`https://image.tmdb.org/t/p/original${movie.poster_path}`}
         alt={displayTitle}
-        width={220}
+        // width={200}
         //
       />
 
@@ -46,10 +44,9 @@ const Card = ({ movie, selected }: CardProps) => {
             styles={buildStyles({
               textSize: "30px",
               pathColor:
-              movie.vote_average >= 8
-              ? "blue"
-
-               : movie.vote_average >= 7
+                movie.vote_average >= 8
+                  ? "blue"
+                  : movie.vote_average >= 7
                   ? "#21d07a"
                   : movie.vote_average >= 5
                   ? "#d2d531"
@@ -69,6 +66,7 @@ const Card = ({ movie, selected }: CardProps) => {
           ))}
         </div>
       )} */}
+
       <div className={scss.title}>
         <h4>{displayTitle}</h4>
         <p>{displayDate}</p>
@@ -77,4 +75,4 @@ const Card = ({ movie, selected }: CardProps) => {
   );
 };
 
-export default Card;
+export default CardTwo;
