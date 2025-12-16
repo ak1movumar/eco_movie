@@ -73,8 +73,6 @@ export async function generateMetadata({
           alt: tv.name,
         },
       ],
-      releaseDate: tv.first_air_date,
-      actors: data.credits.map((actor: any) => actor.name),
     },
     twitter: {
       card: "summary_large_image",
@@ -85,6 +83,8 @@ export async function generateMetadata({
     other: {
       "rating:value": tv.vote_average?.toFixed(1) || "0",
       "rating:scale": "10",
+      "tv:release_date": tv.first_air_date,
+      "tv:actors": data.credits.map((actor: any) => actor.name).join(", "),
     },
   };
 }
@@ -138,4 +138,3 @@ export default async function Page({
     </>
   );
 }
-
