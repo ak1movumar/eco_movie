@@ -4,8 +4,11 @@ import scss from "./movies.module.scss";
 import MoviesCard from "@/ui/moviesCard/MoviesCard";
 
 export default function Movies() {
-  const { data: movies, isLoading } = useReadAllMovies();
-  console.log(movies);
+  const { data: movies, isLoading, isError, error } = useReadAllMovies({ pagesToLoad: 5 });
+  
+  if (isError) {
+    console.error("Ошибка загрузки фильмов:", error);
+  }
 
   return (
     <div className={scss.container}>

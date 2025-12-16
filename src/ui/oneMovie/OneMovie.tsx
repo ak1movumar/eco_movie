@@ -34,7 +34,9 @@ export default function OneMovie() {
   if (isError || !data) return <h2 className={scss.error}>Movie not found</h2>;
 
   const { movie, credits, videos } = data;
-  const trailer = videos.find((item: any) => item.type === "Trailer" && item.site === "YouTube");
+  const trailer = videos.find(
+    (item: any) => item.type === "Trailer" && item.site === "YouTube"
+  );
 
   return (
     <section className={scss.container}>
@@ -68,7 +70,11 @@ export default function OneMovie() {
             {trailer && (
               <div>
                 <p>Rating: ⭐ {movie.vote_average.toFixed(1)}</p>
-                <button type="button" className={scss.trailer} onClick={openModal}>
+                <button
+                  type="button"
+                  className={scss.trailer}
+                  onClick={openModal}
+                >
                   <PiPlayCircle size={30} /> Watch Trailer
                 </button>
               </div>
@@ -106,8 +112,15 @@ export default function OneMovie() {
 
       {isTrailerOpen && trailer && (
         <div className={scss.modalOverlay} onClick={closeModal}>
-          <div className={scss.modalContent} onClick={(e) => e.stopPropagation()}>
-            <button className={scss.modalClose} onClick={closeModal} aria-label="Close trailer">
+          <div
+            className={scss.modalContent}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              className={scss.modalClose}
+              onClick={closeModal}
+              aria-label="Close trailer"
+            >
               ✕
             </button>
             <div className={scss.videoWrapper}>

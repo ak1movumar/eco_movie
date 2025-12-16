@@ -1,5 +1,6 @@
 "use client";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import scss from "./card.module.scss";
 
 interface ICard {
@@ -32,11 +33,13 @@ const Card = ({ movie, selected }: CardProps) => {
       className={scss.card}
       onClick={() => push(`/${selected}/${movie.id}`)}
     >
-      <img
-        src={`https://image.tmdb.org/t/p/original${movie.poster_path}`}
+      <Image
+        src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
         alt={displayTitle}
         width={220}
-        // 
+        height={330}
+        quality={85}
+        loading="lazy"
       />
 
       {movie.vote_average !== undefined && (

@@ -1,0 +1,110 @@
+.container {
+  min-height: 100vh;
+  position: relative;
+}
+
+.backdrop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  z-index: 0;
+  opacity: 0.4;
+}
+
+.mainContent {
+  display: flex;
+  gap: 30px;
+  margin-top: -600px;
+  position: relative;
+  z-index: 1;
+  
+  @media (max-width: 1024px) {
+    margin-top: -420px;
+    gap: 20px;
+  }
+  
+  @media (max-width: 768px) {
+    margin-top: -360px;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  
+  @media (max-width: 480px) {
+    margin-top: -260px;
+    padding: 0 8px;
+  }
+}
+
+.poster {
+  flex-shrink: 0;
+  
+  @media (max-width: 1024px) {
+    width: 240px;
+    height: 360px;
+  }
+  
+  @media (max-width: 768px) {
+    width: 220px;
+    height: 330px;
+  }
+  
+  @media (max-width: 480px) {
+    width: 180px;
+    height: 270px;
+  }
+}
+
+.details {
+  flex: 1;
+}
+
+.genres {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.extraInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 20px;
+}
+
+.castSection {
+  margin-top: 200px;
+  position: relative;
+  z-index: 1;
+  
+  @media (max-width: 768px) {
+    margin-top: 100px;
+  }
+}
+
+.casts {
+  display: flex;
+  gap: 20px;
+  overflow-x: auto;
+  padding-top: 20px;
+  scrollbar-width: none;
+  
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  
+  -ms-overflow-style: none;
+}
+
+.cast {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+  width: 185px;
+}
+

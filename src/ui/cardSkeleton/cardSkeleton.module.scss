@@ -1,0 +1,67 @@
+.container {
+  display: flex;
+  gap: 16px;
+  padding: 20px 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+  
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  
+  -ms-overflow-style: none;
+}
+
+.card {
+  position: relative;
+  flex-shrink: 0;
+  width: 200px;
+  height: 400px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  
+  .rating {
+    position: absolute;
+    bottom: 66px;
+    left: 10px;
+  }
+  
+  .title {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    right: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  @media (max-width: 1024px) {
+    width: 180px;
+    height: 350px;
+    
+    .rating {
+      bottom: 60px;
+    }
+  }
+
+  @media (max-width: 768px) {
+    width: 150px;
+    height: 300px;
+    
+    .rating {
+      bottom: 50px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    width: 120px;
+    height: 250px;
+    
+    .rating {
+      bottom: 40px;
+    }
+  }
+}
+
