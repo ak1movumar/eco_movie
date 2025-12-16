@@ -6,7 +6,6 @@ import { useRouter } from "next/navigation";
 
 const Header = () => {
   const [isModal, setIsModal] = useState(false);
-  console.log(isModal);
 
   const router = useRouter();
   return (

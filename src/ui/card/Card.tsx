@@ -46,14 +46,6 @@ const Card = ({ movie, selected }: CardProps) => {
         <div className={scss.scale}>{movie.vote_average.toFixed(1)}</div>
       )}
 
-      {/* {movie.genre_ids && (
-        <div className={scss.genres}>
-          {movie.genre_ids.map((item, index) => (
-            <p key={index}>{item}</p>
-          ))}
-        </div>
-      )} */}
-
       <div className={scss.title}>
         <h4>{displayTitle}</h4>
         <p>{displayDate}</p>

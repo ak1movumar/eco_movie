@@ -24,6 +24,11 @@
   padding: 0 16px;
   box-sizing: border-box;
 }
+@media (max-width: 480px) {
+  .container{
+    padding: 0 10px;
+  }
+}
 body {
   display: flex;
   flex-direction: column;

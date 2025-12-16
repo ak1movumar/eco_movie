@@ -57,10 +57,7 @@ export default function SectionCard({
                   768: { slidesPerView: 3, spaceBetween: 14 },
                   560: { slidesPerView: 2, spaceBetween: 12 },
                   0: { slidesPerView: 2, spaceBetween: 10 },
-                }}
-                // onSlideChange={() => console.log("slide change")}
-                // onSwiper={(swiper) => console.log(swiper)}
-              >
+                }}>
                 {data?.map((item: MovieType, idx: number) => (
                   <SwiperSlide key={item.id ?? idx}>
                     <Card selected={selected} movie={item} />

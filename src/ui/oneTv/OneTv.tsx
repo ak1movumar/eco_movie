@@ -1,17 +1,17 @@
 "use client";
 
-import { useOneMovie } from "@/hooks/oneMovie/useOneMovie";
+import { useOneTv } from "@/hooks/oneTv/useOneTv";
 import { PiPlayCircle } from "react-icons/pi";
-import scss from "./oneMovie.module.scss";
+import scss from "./oneTv.module.scss";
 import { useEffect, useState, useCallback } from "react";
 import Card from "../card/Card";
 
-interface OneMovieProps {
-  movieId: string;
+interface OneTvProps {
+  tvId: string;
 }
 
-export default function OneMovie({ movieId }: OneMovieProps) {
-  const { data, isLoading, isError } = useOneMovie(movieId);
+export default function OneTv({ tvId }: OneTvProps) {
+  const { data, isLoading, isError } = useOneTv(tvId);
   const [isTrailerOpen, setIsTrailerOpen] = useState(false);
   const [selectedVideo, setSelectedVideo] = useState<any>(null);
 
@@ -19,7 +19,7 @@ export default function OneMovie({ movieId }: OneMovieProps) {
     setIsTrailerOpen(false);
     setSelectedVideo(null);
   }, []);
-
+  
   const openModal = useCallback((video: any) => {
     setSelectedVideo(video);
     setIsTrailerOpen(true);
@@ -42,29 +42,33 @@ export default function OneMovie({ movieId }: OneMovieProps) {
   }, [isTrailerOpen, closeModal]);
 
   if (isLoading) return <h2 className={scss.loading}>Loading...</h2>;
-  if (isError || !data) return <h2 className={scss.error}>Movie not found</h2>;
+  if (isError || !data) return <h2 className={scss.error}>TV Show not found</h2>;
 
-  const { movie, credits, videos, similar, recommendations } = data;
-
+  const { tv, credits, videos, similar, recommendations } = data;
+  
   // Фильтруем видео по YouTube и типам
-  const youtubeVideos = videos.filter((item: any) => item.site === "YouTube");
-
-  // Разделяем на официальные и другие
-  const officialVideos = youtubeVideos.filter(
-    (item: any) => item.official === true
+  const youtubeVideos = videos.filter(
+    (item: any) => item.site === "YouTube"
   );
 
+  // Разделяем на официальные и другие
+  const officialVideos = youtubeVideos.filter((item: any) => item.official === true);
+
   // Находим главный трейлер (официальный трейлер или первый трейлер)
-  const mainTrailer =
-    officialVideos.find((item: any) => item.type === "Trailer") ||
-    youtubeVideos.find((item: any) => item.type === "Trailer");
+  const mainTrailer = officialVideos.find((item: any) => item.type === "Trailer") ||
+                      youtubeVideos.find((item: any) => item.type === "Trailer");
+
+  // TV shows have episode_run_time as an array, get the first value or average
+  const runtime = tv.episode_run_time && tv.episode_run_time.length > 0
+    ? tv.episode_run_time[0]
+    : null;
 
   return (
     <section className={scss.container}>
       <div className={scss.backdrop}>
         <img
-          src={`https://image.tmdb.org/t/p/original${movie.backdrop_path}`}
-          alt={movie.title}
+          src={`https://image.tmdb.org/t/p/original${tv.backdrop_path}`}
+          alt={tv.name}
         />
       </div>
 
@@ -72,24 +76,24 @@ export default function OneMovie({ movieId }: OneMovieProps) {
         <div className={scss.mainContent}>
           <div className={scss.poster}>
             <img
-              src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-              alt={movie.title}
+              src={`https://image.tmdb.org/t/p/w500${tv.poster_path}`}
+              alt={tv.name}
             />
           </div>
 
           <div className={scss.details}>
             <h1>
-              {movie.title} <span>({movie.release_date?.split("-")[0]})</span>
+              {tv.name} <span>({tv.first_air_date?.split("-")[0]})</span>
             </h1>
 
             <div className={scss.genres}>
-              {movie.genres?.map((g: any) => (
+              {tv.genres?.map((g: any) => (
                 <span key={g.id}>{g.name}</span>
               ))}
             </div>
 
             <div className={scss.ratingAndVideos}>
-              <p>Rating: ⭐️ {movie.vote_average.toFixed(1)}</p>
+              <p>Rating: ⭐️ {tv.vote_average.toFixed(1)}</p>
               {mainTrailer && (
                 <button
                   type="button"
@@ -100,12 +104,20 @@ export default function OneMovie({ movieId }: OneMovieProps) {
                 </button>
               )}
             </div>
-            <p className={scss.overview}>{movie.overview}</p>
+            <p className={scss.overview}>{tv.overview}</p>
 
             <div className={scss.extraInfo}>
-              <p>Status: {movie.status}</p>
-              <p>Release Date: {movie.release_date}</p>
-              <p>Runtime: {movie.runtime} min</p>
+              <p>Status: {tv.status}</p>
+              <p>First Air Date: {tv.first_air_date}</p>
+              {tv.number_of_seasons && (
+                <p>Seasons: {tv.number_of_seasons}</p>
+              )}
+              {tv.number_of_episodes && (
+                <p>Episodes: {tv.number_of_episodes}</p>
+              )}
+              {runtime && (
+                <p>Episode Runtime: {runtime} min</p>
+              )}
             </div>
           </div>
         </div>
@@ -141,7 +153,7 @@ export default function OneMovie({ movieId }: OneMovieProps) {
             <h2>Similar</h2>
             <div className={scss.similarList}>
               {similar.slice(0, 20).map((item: any) => (
-                <Card key={item.id} movie={item} selected="movie" />
+                <Card key={item.id} movie={item} selected="tv" />
               ))}
             </div>
           </div>
@@ -152,7 +164,7 @@ export default function OneMovie({ movieId }: OneMovieProps) {
             <h2>Recommendations</h2>
             <div className={scss.recommendationsList}>
               {recommendations.slice(0, 20).map((item: any) => (
-                <Card key={item.id} movie={item} selected="movie" />
+                <Card key={item.id} movie={item} selected="tv" />
               ))}
             </div>
           </div>
@@ -207,3 +219,4 @@ export default function OneMovie({ movieId }: OneMovieProps) {
     </section>
   );
 }
+
