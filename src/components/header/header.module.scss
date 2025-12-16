@@ -37,7 +37,7 @@
     }
     .right_header {
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       gap: 32px;
       a {
         font-size: 1.3rem;

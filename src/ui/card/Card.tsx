@@ -2,6 +2,7 @@
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import scss from "./card.module.scss";
+import { buildStyles, CircularProgressbar } from "react-circular-progressbar";
 
 interface ICard {
   id: number;
@@ -28,6 +29,8 @@ const Card = ({ movie, selected }: CardProps) => {
   // Movie же TV дата
   const displayDate = movie.release_date || movie.first_air_date || "N/A";
 
+  const rating = movie.vote_average || 0;
+
   return (
     <div className={scss.card} onClick={() => push(`/${selected}/${movie.id}`)}>
       <Image
@@ -35,15 +38,28 @@ const Card = ({ movie, selected }: CardProps) => {
         alt={displayTitle}
         width={220}
         height={330}
-        placeholder="empty" 
+        placeholder="empty"
         quality={75}
         // loading="lazy"
         loading="eager"
-
       />
 
       {movie.vote_average !== undefined && (
-        <div className={scss.scale}>{movie.vote_average.toFixed(1)}</div>
+        <div className={scss.scale}>
+          <CircularProgressbar
+            value={rating}
+            maxValue={10}
+            text={rating.toFixed(1)}
+            styles={buildStyles({
+              textSize: "30px",
+              pathColor:
+                rating >= 7 ? "#21d07a" : rating >= 5 ? "#d2d531" : "#db2360",
+              textColor: "#fff",
+              trailColor: "#333",
+              backgroundColor: "#101c3a",
+            })}
+          />
+        </div>
       )}
 
       <div className={scss.title}>
