@@ -1,14 +1,16 @@
 "use client";
 
-import { useParams } from "next/navigation";
 import { useOneMovie } from "@/hooks/oneMovie/useOneMovie";
 import { PiPlayCircle } from "react-icons/pi";
 import scss from "./oneMovie.module.scss";
 import { useEffect, useState, useCallback } from "react";
 
-export default function OneMovie() {
-  const { id } = useParams();
-  const { data, isLoading, isError } = useOneMovie(id as string);
+interface OneMovieProps {
+  movieId: string;
+}
+
+export default function OneMovie({ movieId }: OneMovieProps) {
+  const { data, isLoading, isError } = useOneMovie(movieId);
   const [isTrailerOpen, setIsTrailerOpen] = useState(false);
 
   const closeModal = useCallback(() => setIsTrailerOpen(false), []);
@@ -69,7 +71,7 @@ export default function OneMovie() {
 
             {trailer && (
               <div>
-                <p>Rating: ⭐ {movie.vote_average.toFixed(1)}</p>
+                <p>Rating: ⭐️ {movie.vote_average.toFixed(1)}</p>
                 <button
                   type="button"
                   className={scss.trailer}
