@@ -25,34 +25,38 @@ export const useReadAllMovies = (options: UseReadAllMoviesOptions = {}) => {
 
         // Ограничиваем одновременные запросы до 3 для избежания rate limiting
         const CONCURRENT_LIMIT = 3;
-        
+
         for (let i = page; i <= endPage; i++) {
           requests.push(
-            axios.get(
-              `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&language=en-US&page=${i}`,
-              {
-                timeout: 10000, // 10 секунд таймаут
-                headers: {
-                  'Accept': 'application/json',
-                },
-              }
-            ).catch((error) => {
-              console.error(`Ошибка загрузки страницы ${i}:`, error.message);
-              // Возвращаем пустой результат вместо ошибки
-              return { data: { results: [] } };
-            })
+            axios
+              .get(
+                `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&language=en-US&page=${i}`,
+                {
+                  timeout: 10000, // 10 секунд таймаут
+                  headers: {
+                    Accept: "application/json",
+                  },
+                }
+              )
+              .catch((error) => {
+                console.error(`Ошибка загрузки страницы ${i}:`, error.message);
+                // Возвращаем пустой результат вместо ошибки
+                return { data: { results: [] } };
+              })
           );
 
           // Выполняем запросы батчами по CONCURRENT_LIMIT
           if (requests.length >= CONCURRENT_LIMIT || i === endPage) {
             const batchResponses = await Promise.all(requests);
-            const batchMovies = batchResponses.flatMap((res) => res.data?.results || []);
-            
+            const batchMovies = batchResponses.flatMap(
+              (res) => res.data?.results || []
+            );
+
             // Если это не последний батч, очищаем массив для следующего батча
             if (i < endPage) {
               requests.length = 0;
               // Небольшая задержка между батчами
-              await new Promise(resolve => setTimeout(resolve, 200));
+              await new Promise((resolve) => setTimeout(resolve, 200));
               continue;
             }
 

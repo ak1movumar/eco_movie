@@ -6,8 +6,8 @@ import scss from "./card.module.scss";
 interface ICard {
   id: number;
   poster_path: string;
-  title?: string; 
-  name?: string; 
+  title?: string;
+  name?: string;
   release_date?: string;
   first_air_date?: string;
   vote_average?: number;
@@ -29,17 +29,17 @@ const Card = ({ movie, selected }: CardProps) => {
   const displayDate = movie.release_date || movie.first_air_date || "N/A";
 
   return (
-    <div
-      className={scss.card}
-      onClick={() => push(`/${selected}/${movie.id}`)}
-    >
+    <div className={scss.card} onClick={() => push(`/${selected}/${movie.id}`)}>
       <Image
         src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
         alt={displayTitle}
         width={220}
         height={330}
-        quality={85}
-        loading="lazy"
+        placeholder="empty" 
+        quality={75}
+        // loading="lazy"
+        loading="eager"
+
       />
 
       {movie.vote_average !== undefined && (
