@@ -16,6 +16,24 @@
     justify-content: space-between;
     align-items: center;
     // height: 100%;
+    .menu {
+      display: none;
+    }
+    .sidebar {
+      position: absolute;
+      left: -1px;
+      top: 60px;
+      z-index: 120;
+      height: 100vh;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      padding-top: 20px;
+      gap: 20px;
+      align-items: center;
+      background-color: #04152D;
+      font-size: 1.25rem;
+    }
 
     .left_header {
       display: flex;
@@ -78,7 +96,7 @@
         border-radius: 8px;
         width: 100%;
         max-width: 90%;
-        button{
+        button {
           border-radius: 0 10px 10px 0;
           height: 70px;
         }
@@ -134,9 +152,17 @@
     }
   }
   @media (max-width: 450px) {
+    .header{
+      padding-block: 0;
+      padding: 65 8px;
+      height: 90px;
+    }
     .mainContainer {
       gap: 7px;
-      padding: 0 8px;
+      .menu {
+        display: flex;
+        font-size: 41px;
+      }
       .left_header {
         gap: 8px;
         h2 {
@@ -149,10 +175,10 @@
       }
       .right_header {
         a {
-          font-size: 18px;
+          display: none;
         }
         span {
-          font-size: 20px;
+          font-size: 40px;
         }
         gap: 8px;
         button {

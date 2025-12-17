@@ -3,15 +3,46 @@ import React, { useState } from "react";
 import scss from "./header.module.scss";
 import { CiSearch } from "react-icons/ci";
 import { useRouter } from "next/navigation";
+import { IoMdMenu } from "react-icons/io";
 
 const Header = () => {
   const [isModal, setIsModal] = useState(false);
+  const [menuIsModal, setMenuIsModal] = useState(false);
 
   const router = useRouter();
   return (
     <header className={scss.header}>
       <div className="container">
         <div className={scss.mainContainer}>
+          <span
+            className={scss.menu}
+            onClick={() => setMenuIsModal(!menuIsModal)}
+            role="button"
+            aria-label="Открыть меню"
+            aria-expanded={menuIsModal}
+          >
+            <IoMdMenu />
+          </span>
+          {menuIsModal && (
+            <div className={scss.sidebar} onClick={() => setMenuIsModal(false)}>
+              <a
+                onClick={() => {
+                  setMenuIsModal(false);
+                  router.push("/movies");
+                }}
+              >
+                Movies
+              </a>
+              <a
+                onClick={() => {
+                  setMenuIsModal(false);
+                  router.push("/tv");
+                }}
+              >
+                TV Shows
+              </a>
+            </div>
+          )}
           <div onClick={() => router.push("/")} className={scss.left_header}>
             <img
               src="https://movie.elcho.dev/assets/eco-movie-logo-a8_bjuTM.svg"
