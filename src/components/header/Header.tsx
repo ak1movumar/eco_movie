@@ -4,6 +4,7 @@ import scss from "./header.module.scss";
 import { CiSearch } from "react-icons/ci";
 import { useRouter } from "next/navigation";
 import { IoMdMenu } from "react-icons/io";
+import { GoX } from "react-icons/go";
 
 const Header = () => {
   const [isModal, setIsModal] = useState(false);
@@ -16,12 +17,23 @@ const Header = () => {
         <div className={scss.mainContainer}>
           <span
             className={scss.menu}
-            onClick={() => setMenuIsModal(!menuIsModal)}
+            onClick={() => setMenuIsModal((prev) => !prev)}
             role="button"
-            aria-label="Открыть меню"
+            aria-label="Toggle menu"
             aria-expanded={menuIsModal}
           >
-            <IoMdMenu />
+            <div className={scss.iconWrapper}>
+              <IoMdMenu
+                className={`${scss.icon} ${scss.menuIcon} ${
+                  menuIsModal ? scss.hidden : ""
+                }`}
+              />
+              <GoX
+                className={`${scss.icon} ${scss.closeIcon} ${
+                  menuIsModal ? scss.visible : ""
+                }`}
+              />
+            </div>
           </span>
           {menuIsModal && (
             <div className={scss.sidebar} onClick={() => setMenuIsModal(false)}>

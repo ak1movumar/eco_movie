@@ -31,7 +31,7 @@
       padding-top: 20px;
       gap: 20px;
       align-items: center;
-      background-color: #04152D;
+      background-color: #04152d;
       font-size: 1.25rem;
     }
 
@@ -152,7 +152,7 @@
     }
   }
   @media (max-width: 450px) {
-    .header{
+    .header {
       padding-block: 0;
       padding: 65 8px;
       height: 90px;
@@ -160,31 +160,81 @@
     .mainContainer {
       gap: 7px;
       .menu {
-        display: flex;
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        padding: 8px;
+        border-radius: 50%;
+        transition: background 0.2s;
+
+        // &:hover {
+        //   background: rgba(255, 255, 255, 0.1);
+        // }
+
+        &:active {
+          transform: scale(0.95);
+        }
+      }
+
+      .iconWrapper {
+        position: relative;
+        width: 41px;
+        height: 41px;
+      }
+
+      .icon {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
         font-size: 41px;
+        color: #fff;
+        transition: opacity 0.3s ease,
+          transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
       }
-      .left_header {
-        gap: 8px;
-        h2 {
-          font-size: 25px;
-        }
-        img {
-          width: 40px;
-          height: 40px;
+
+      .menuIcon {
+        opacity: 1;
+        transform: translate(-50%, -50%) rotate(0deg) scale(1);
+
+        &.hidden {
+          opacity: 0;
+          transform: translate(-50%, -50%) rotate(-90deg) scale(0.6);
         }
       }
-      .right_header {
-        a {
-          display: none;
+
+      .closeIcon {
+        opacity: 0;
+        transform: translate(-50%, -50%) rotate(90deg) scale(0.6);
+
+        &.visible {
+          opacity: 1;
+          transform: translate(-50%, -50%) rotate(0deg) scale(1);
         }
-        span {
-          font-size: 40px;
-        }
-        gap: 8px;
-        button {
-          min-width: 50px;
-          padding: 5px 10px;
-        }
+      }
+    }
+    .left_header {
+      gap: 8px;
+      h2 {
+        font-size: 25px;
+      }
+      img {
+        width: 40px;
+        height: 40px;
+      }
+    }
+    .right_header {
+      a {
+        display: none;
+      }
+      span {
+        font-size: 40px;
+      }
+      gap: 8px;
+      button {
+        min-width: 50px;
+        padding: 5px 10px;
       }
     }
   }
