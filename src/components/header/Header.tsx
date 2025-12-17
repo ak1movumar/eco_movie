@@ -9,8 +9,25 @@ import { GoX } from "react-icons/go";
 const Header = () => {
   const [isModal, setIsModal] = useState(false);
   const [menuIsModal, setMenuIsModal] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const router = useRouter();
+
+  const handleSearch = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter" && searchQuery.trim()) {
+      router.push(`/search/${encodeURIComponent(searchQuery.trim())}`);
+      setIsModal(false);
+      setSearchQuery("");
+    }
+  };
+
+  const handleSearchSubmit = () => {
+    if (searchQuery.trim()) {
+      router.push(`/search/${encodeURIComponent(searchQuery.trim())}`);
+      setIsModal(false);
+      setSearchQuery("");
+    }
+  };
   return (
     <header className={scss.header}>
       <div className="container">
@@ -81,8 +98,14 @@ const Header = () => {
                     type="text"
                     placeholder="Search movies or TV shows..."
                     className={scss.modalInput}
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    onKeyDown={handleSearch}
+                    autoFocus
                   />
-                  <button onClick={() => setIsModal(false)}>Close</button>{" "}
+                  <button onClick={handleSearchSubmit} className={scss.searchBtn}>
+                    Search
+                  </button>
                 </div>
               </div>
             )}

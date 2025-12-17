@@ -1,0 +1,83 @@
+.container {
+  min-height: 100vh;
+  background-color: #0f1b35;
+  padding: 120px 0 80px;
+  color: #fff;
+}
+
+.title {
+  font-size: 1.8rem;
+  font-weight: 600;
+  margin-bottom: 40px;
+  color: #fff;
+}
+
+.results {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 30px;
+  justify-items: center;
+}
+
+.skeletonGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 30px;
+}
+
+.skeletonCard {
+  width: 100%;
+  max-width: 230px;
+}
+
+.loading,
+.error,
+.noResults {
+  text-align: center;
+  padding: 100px 20px;
+  color: #aaa;
+  font-size: 1.2rem;
+}
+
+@media (max-width: 1200px) {
+  .results,
+  .skeletonGrid {
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 25px;
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 100px 0 60px;
+  }
+
+  .title {
+    font-size: 1.4rem;
+    margin-bottom: 30px;
+  }
+
+  .results,
+  .skeletonGrid {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 90px 0 50px;
+  }
+
+  .title {
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+  }
+
+  .results,
+  .skeletonGrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+  }
+}
+

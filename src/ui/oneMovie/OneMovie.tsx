@@ -3,8 +3,12 @@
 import { useOneMovie } from "@/hooks/oneMovie/useOneMovie";
 import { PiPlayCircle } from "react-icons/pi";
 import scss from "./oneMovie.module.scss";
-import { useEffect, useState, useCallback } from "react";
-import Card from "../card/Card";
+import { useEffect, useState, useCallback, lazy, Suspense } from "react";
+import Image from "next/image";
+import DetailsSkeleton from "../detailsSkeleton/DetailsSkeleton";
+import CardSkeleton from "../cardSkeleton/CardSkeleton";
+
+const Card = lazy(() => import("../card/Card"));
 
 interface OneMovieProps {
   movieId: string;
@@ -14,6 +18,7 @@ export default function OneMovie({ movieId }: OneMovieProps) {
   const { data, isLoading, isError } = useOneMovie(movieId);
   const [isTrailerOpen, setIsTrailerOpen] = useState(false);
   const [selectedVideo, setSelectedVideo] = useState<any>(null);
+  const [imageLoaded, setImageLoaded] = useState(false);
 
   const closeModal = useCallback(() => {
     setIsTrailerOpen(false);
@@ -41,7 +46,7 @@ export default function OneMovie({ movieId }: OneMovieProps) {
     };
   }, [isTrailerOpen, closeModal]);
 
-  if (isLoading) return <h2 className={scss.loading}>Loading...</h2>;
+  if (isLoading) return <DetailsSkeleton />;
   if (isError || !data) return <h2 className={scss.error}>Movie not found</h2>;
 
   const { movie, credits, videos, similar, recommendations } = data;
@@ -62,18 +67,29 @@ export default function OneMovie({ movieId }: OneMovieProps) {
   return (
     <section className={scss.container}>
       <div className={scss.backdrop}>
-        <img
-          src={`https://image.tmdb.org/t/p/original${movie.backdrop_path}`}
+        <Image
+          src={`https://image.tmdb.org/t/p/w1280${movie.backdrop_path}`}
           alt={movie.title}
+          fill
+          priority
+          quality={75}
+          sizes="100vw"
+          style={{ objectFit: "cover" }}
+          onLoad={() => setImageLoaded(true)}
         />
       </div>
 
       <div className="container">
         <div className={scss.mainContent}>
           <div className={scss.poster}>
-            <img
+            <Image
               src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
               alt={movie.title}
+              width={280}
+              height={420}
+              quality={85}
+              loading="eager"
+              style={{ borderRadius: 12 }}
             />
           </div>
 
@@ -112,26 +128,33 @@ export default function OneMovie({ movieId }: OneMovieProps) {
 
         {officialVideos.length > 0 && (
           <div className={scss.videosSection}>
-            <div className={scss.videoGroup}>
-              <h2>Official Videos</h2>
-              <div className={scss.videosList}>
-                {officialVideos.map((video: any) => (
-                  <button
-                    key={video.id}
-                    type="button"
-                    className={`${scss.videoCard} ${
-                      selectedVideo?.id === video.id ? scss.active : ""
-                    }`}
-                    onClick={() => openModal(video)}
-                  >
-                    <PiPlayCircle size={24} />
-                    <div className={scss.videoInfo}>
-                      <span className={scss.videoName}>{video.name}</span>
-                      <span className={scss.videoType}>{video.type}</span>
+            <h2>Official Videos</h2>
+            <div className={scss.videosList}>
+              {officialVideos.map((video: any) => (
+                <div
+                  key={video.id}
+                  className={`${scss.videoCard} ${
+                    selectedVideo?.id === video.id ? scss.active : ""
+                  }`}
+                  onClick={() => openModal(video)}
+                >
+                  <div className={scss.videoThumbnail}>
+                    <Image
+                      src={`https://img.youtube.com/vi/${video.key}/mqdefault.jpg`}
+                      alt={video.name}
+                      fill
+                      sizes="280px"
+                      quality={75}
+                      loading="lazy"
+                      style={{ objectFit: "cover" }}
+                    />
+                    <div className={scss.playIcon}>
+                      <PiPlayCircle size={50} />
                     </div>
-                  </button>
-                ))}
-              </div>
+                  </div>
+                  <p className={scss.videoName}>{video.name}</p>
+                </div>
+              ))}
             </div>
           </div>
         )}
@@ -140,9 +163,11 @@ export default function OneMovie({ movieId }: OneMovieProps) {
           <div className={scss.similarSection}>
             <h2>Similar</h2>
             <div className={scss.similarList}>
-              {similar.slice(0, 20).map((item: any) => (
-                <Card key={item.id} movie={item} selected="movie" />
-              ))}
+              <Suspense fallback={<CardSkeleton count={6} />}>
+                {similar.slice(0, 20).map((item: any) => (
+                  <Card key={item.id} movie={item} selected="movie" />
+                ))}
+              </Suspense>
             </div>
           </div>
         )}
@@ -151,9 +176,11 @@ export default function OneMovie({ movieId }: OneMovieProps) {
           <div className={scss.recommendationsSection}>
             <h2>Recommendations</h2>
             <div className={scss.recommendationsList}>
-              {recommendations.slice(0, 20).map((item: any) => (
-                <Card key={item.id} movie={item} selected="movie" />
-              ))}
+              <Suspense fallback={<CardSkeleton count={6} />}>
+                {recommendations.slice(0, 20).map((item: any) => (
+                  <Card key={item.id} movie={item} selected="movie" />
+                ))}
+              </Suspense>
             </div>
           </div>
         )}
@@ -163,13 +190,18 @@ export default function OneMovie({ movieId }: OneMovieProps) {
           <div className={scss.casts}>
             {credits.map((actor: any) => (
               <div key={actor.id} className={scss.cast}>
-                <img
+                <Image
                   src={
                     actor.profile_path
                       ? `https://image.tmdb.org/t/p/w185${actor.profile_path}`
                       : "/no-image.jpg"
                   }
                   alt={actor.name}
+                  width={150}
+                  height={150}
+                  quality={75}
+                  loading="lazy"
+                  style={{ borderRadius: "50%", objectFit: "cover" }}
                 />
                 <h4>{actor.name}</h4>
                 <p>{actor.character}</p>

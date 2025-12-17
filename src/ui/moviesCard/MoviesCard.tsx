@@ -1,15 +1,19 @@
 "use client";
-import Card from "../card/Card";
+import { lazy, Suspense } from "react";
 import scss from "./moviesCard.module.scss";
+import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
+
+const Card = lazy(() => import("../card/Card"));
 
 interface MediaType {
   id: number;
-  title?: string; // movie үчүн
-  name?: string; // tv үчүн
+  title?: string;
+  name?: string;
   poster_path: string;
   overview: string;
-  release_date?: string; // movie үчүн
-  first_air_date?: string; // tv үчүн
+  release_date?: string;
+  first_air_date?: string;
 }
 
 interface MoviesCardProps {
@@ -17,16 +21,29 @@ interface MoviesCardProps {
   toggle: string;
   isLoading: boolean;
   data: MediaType[];
-  selected: "movie" | "tv"; // параметр
+  selected: "movie" | "tv";
 }
 
+function GridSkeleton({ count = 20 }: { count?: number }) {
+  return (
+    <SkeletonTheme baseColor="#1a1a2e" highlightColor="#16213e">
+      <div className={scss.skeletonList}>
+        {Array.from({ length: count }).map((_, i) => (
+          <div key={i} className={scss.skeletonCard}>
+            <Skeleton height={345} borderRadius={12} />
+            <Skeleton height={18} width="80%" style={{ marginTop: 10 }} />
+            <Skeleton height={14} width="50%" style={{ marginTop: 5 }} />
+          </div>
+        ))}
+      </div>
+    </SkeletonTheme>
+  );
+}
 
 export default function MoviesCard({
-  title,
-  toggle,
   data,
   isLoading,
-  selected,// колдоном
+  selected,
 }: MoviesCardProps) {
   return (
     <div className={scss.container}>
@@ -34,11 +51,17 @@ export default function MoviesCard({
         <div className={scss.mainContainer}>
           <div className={scss.list}>
             {isLoading ? (
-              <h1>Loading...</h1>
+              <GridSkeleton count={20} />
             ) : (
-              data.map((item: MediaType, idx: number) => (
-                <Card key={`${selected}-${item?.id}-${idx}`} movie={item} selected={selected} />
-              ))
+              <Suspense fallback={<GridSkeleton count={20} />}>
+                {data.map((item: MediaType, idx: number) => (
+                  <Card
+                    key={`${selected}-${item?.id}-${idx}`}
+                    movie={item}
+                    selected={selected}
+                  />
+                ))}
+              </Suspense>
             )}
           </div>
         </div>

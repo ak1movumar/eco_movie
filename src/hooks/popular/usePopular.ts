@@ -1,31 +1,27 @@
 "use client";
 import { API_KEY } from "@/constants/api";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useState } from "react";
 
-type TogglePopular = "Movies" | "TV Shows";
+type MediaType = "movie" | "tv";
 
 export const usePopular = () => {
-  const [toggle, setToggle] = useState<TogglePopular>("Movies");
-  const queryClient = useQueryClient();
+  const [mediaType, setMediaType] = useState<MediaType>("movie");
 
   const query = useQuery({
-    queryKey: ["popular", toggle],
+    queryKey: ["popular", mediaType],
     queryFn: async () => {
-      const type = toggle === "Movies" ? "movie" : "tv";
       const response = await axios.get(
-        `https://api.themoviedb.org/3/${type}/popular?api_key=${API_KEY}`
+        `https://api.themoviedb.org/3/${mediaType}/popular?api_key=${API_KEY}`
       );
       return response.data.results;
     },
   });
 
-  const handleToggle = () => {
-    const newToggle = toggle === "Movies" ? "TV Shows" : "Movies";
-    setToggle(newToggle);
-    queryClient.invalidateQueries({ queryKey: ["popular", newToggle] });
+  return {
+    ...query,
+    mediaType,
+    setMediaType,
   };
-
-  return { ...query, toggle, handleToggle };
 };

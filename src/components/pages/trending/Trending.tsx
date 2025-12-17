@@ -6,17 +6,17 @@ const Trending = () => {
   const {
     data: trendingMovies,
     isLoading,
-    toggle,
-    handleToggle,
+    period,
+    setPeriod,
   } = useReadMovie();
 
   return (
     <SectionCard
+      title="Trending"
       isLoading={isLoading}
       data={trendingMovies}
-      title={`Trending (${toggle})`}
-      toggle={toggle}
-      onToggle={handleToggle}
+      period={period}
+      onPeriodChange={setPeriod}
     />
   );
 };

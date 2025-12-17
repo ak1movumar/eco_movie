@@ -6,11 +6,14 @@
   border-radius: 12px;
   gap: 20px;
   width: 230px;
+  min-width: 230px;
   height: 450px;
   position: relative;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   overflow: hidden;
   background-color: #111;
+  flex-shrink: 0;
+  cursor: pointer;
 
   img {
     width: 100%;
@@ -26,7 +29,7 @@
 
 .scale {
   position: absolute;
-  bottom: 80px;
+  bottom: 100px;
   left: 10px;
   width: 50px;
   height: 50px;
@@ -69,19 +72,19 @@
     }
   }
 
-  /* 📱 Адаптация */
   @media (max-width: 1024px) {
-    width: 160px;
+    width: 180px;
+    min-width: 180px;
     height: 350px;
 
     img {
-      height: 350px;
+      height: 280px;
     }
 
     .scale {
       width: 40px;
       height: 40px;
-      bottom: 60px;
+      bottom: 80px;
     }
 
     .genres span {
@@ -90,22 +93,23 @@
     }
 
     .title h4 {
-      font-size: 15px;
+      font-size: 14px;
     }
   }
 
   @media (max-width: 768px) {
-    width: 150px;
-    height: 300px;
+    width: 160px;
+    min-width: 160px;
+    height: 320px;
 
     img {
-      height: 300px;
+      height: 250px;
     }
 
     .scale {
       width: 38px;
       height: 38px;
-      bottom: 50px;
+      bottom: 80px;
     }
 
     .genres {
@@ -120,23 +124,24 @@
     }
 
     .title h4 {
-      font-size: 14px;
+      font-size: 13px;
     }
   }
 
   @media (max-width: 480px) {
-    width: 160px;
-    height: 320px;
+    width: 140px;
+    min-width: 140px;
+    height: 280px;
 
     img {
       width: 100%;
-      height: 300px;
+      height: 210px;
     }
 
     .scale {
       width: 32px;
       height: 32px;
-      bottom: 40px;
+      bottom: 80px;
     }
 
     .genres {
@@ -157,7 +162,6 @@
       font-size: 11px;
     }
 
-    /* 📴 Hover эффект мобайлда өчөт */
     &:hover {
       transform: none;
       box-shadow: none;

@@ -3,17 +3,20 @@ import SectionCard from "@/ui/sectionCard/SectionCard";
 import { usePopular } from "@/hooks/popular/usePopular";
 
 export default function Popular() {
-  const { data: popularMovies, isLoading, toggle, handleToggle } = usePopular();
+  const {
+    data: popularMovies,
+    isLoading,
+    mediaType,
+    setMediaType,
+  } = usePopular();
 
   return (
     <SectionCard
+      title="Popular"
       isLoading={isLoading}
       data={popularMovies || []}
-      title={`Popular (${toggle})`}
-      toggle={toggle}
-      onToggle={handleToggle}
-      selected={toggle === "Movies" ? "movie" : "tv"}
-      key={0}
+      mediaType={mediaType}
+      onMediaChange={setMediaType}
     />
   );
 }

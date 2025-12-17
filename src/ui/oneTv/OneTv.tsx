@@ -3,8 +3,12 @@
 import { useOneTv } from "@/hooks/oneTv/useOneTv";
 import { PiPlayCircle } from "react-icons/pi";
 import scss from "./oneTv.module.scss";
-import { useEffect, useState, useCallback } from "react";
-import Card from "../card/Card";
+import { useEffect, useState, useCallback, lazy, Suspense } from "react";
+import Image from "next/image";
+import DetailsSkeleton from "../detailsSkeleton/DetailsSkeleton";
+import CardSkeleton from "../cardSkeleton/CardSkeleton";
+
+const Card = lazy(() => import("../card/Card"));
 
 interface OneTvProps {
   tvId: string;
@@ -19,7 +23,7 @@ export default function OneTv({ tvId }: OneTvProps) {
     setIsTrailerOpen(false);
     setSelectedVideo(null);
   }, []);
-  
+
   const openModal = useCallback((video: any) => {
     setSelectedVideo(video);
     setIsTrailerOpen(true);
@@ -41,43 +45,55 @@ export default function OneTv({ tvId }: OneTvProps) {
     };
   }, [isTrailerOpen, closeModal]);
 
-  if (isLoading) return <h2 className={scss.loading}>Loading...</h2>;
+  if (isLoading) return <DetailsSkeleton />;
   if (isError || !data) return <h2 className={scss.error}>TV Show not found</h2>;
 
   const { tv, credits, videos, similar, recommendations } = data;
-  
-  // Фильтруем видео по YouTube и типам
-  const youtubeVideos = videos.filter(
-    (item: any) => item.site === "YouTube"
+
+  // Фильтруем видео по YouTube
+  const youtubeVideos = videos.filter((item: any) => item.site === "YouTube");
+
+  // Разделяем на официальные
+  const officialVideos = youtubeVideos.filter(
+    (item: any) => item.official === true
   );
 
-  // Разделяем на официальные и другие
-  const officialVideos = youtubeVideos.filter((item: any) => item.official === true);
+  // Находим главный трейлер
+  const mainTrailer =
+    officialVideos.find((item: any) => item.type === "Trailer") ||
+    youtubeVideos.find((item: any) => item.type === "Trailer");
 
-  // Находим главный трейлер (официальный трейлер или первый трейлер)
-  const mainTrailer = officialVideos.find((item: any) => item.type === "Trailer") ||
-                      youtubeVideos.find((item: any) => item.type === "Trailer");
-
-  // TV shows have episode_run_time as an array, get the first value or average
-  const runtime = tv.episode_run_time && tv.episode_run_time.length > 0
-    ? tv.episode_run_time[0]
-    : null;
+  // TV shows episode runtime
+  const runtime =
+    tv.episode_run_time && tv.episode_run_time.length > 0
+      ? tv.episode_run_time[0]
+      : null;
 
   return (
     <section className={scss.container}>
       <div className={scss.backdrop}>
-        <img
-          src={`https://image.tmdb.org/t/p/original${tv.backdrop_path}`}
+        <Image
+          src={`https://image.tmdb.org/t/p/w1280${tv.backdrop_path}`}
           alt={tv.name}
+          fill
+          priority
+          quality={75}
+          sizes="100vw"
+          style={{ objectFit: "cover" }}
         />
       </div>
 
       <div className="container">
         <div className={scss.mainContent}>
           <div className={scss.poster}>
-            <img
+            <Image
               src={`https://image.tmdb.org/t/p/w500${tv.poster_path}`}
               alt={tv.name}
+              width={280}
+              height={420}
+              quality={85}
+              loading="eager"
+              style={{ borderRadius: 12 }}
             />
           </div>
 
@@ -109,41 +125,44 @@ export default function OneTv({ tvId }: OneTvProps) {
             <div className={scss.extraInfo}>
               <p>Status: {tv.status}</p>
               <p>First Air Date: {tv.first_air_date}</p>
-              {tv.number_of_seasons && (
-                <p>Seasons: {tv.number_of_seasons}</p>
-              )}
+              {tv.number_of_seasons && <p>Seasons: {tv.number_of_seasons}</p>}
               {tv.number_of_episodes && (
                 <p>Episodes: {tv.number_of_episodes}</p>
               )}
-              {runtime && (
-                <p>Episode Runtime: {runtime} min</p>
-              )}
+              {runtime && <p>Episode Runtime: {runtime} min</p>}
             </div>
           </div>
         </div>
 
         {officialVideos.length > 0 && (
           <div className={scss.videosSection}>
-            <div className={scss.videoGroup}>
-              <h2>Official Videos</h2>
-              <div className={scss.videosList}>
-                {officialVideos.map((video: any) => (
-                  <button
-                    key={video.id}
-                    type="button"
-                    className={`${scss.videoCard} ${
-                      selectedVideo?.id === video.id ? scss.active : ""
-                    }`}
-                    onClick={() => openModal(video)}
-                  >
-                    <PiPlayCircle size={24} />
-                    <div className={scss.videoInfo}>
-                      <span className={scss.videoName}>{video.name}</span>
-                      <span className={scss.videoType}>{video.type}</span>
+            <h2>Official Videos</h2>
+            <div className={scss.videosList}>
+              {officialVideos.map((video: any) => (
+                <div
+                  key={video.id}
+                  className={`${scss.videoCard} ${
+                    selectedVideo?.id === video.id ? scss.active : ""
+                  }`}
+                  onClick={() => openModal(video)}
+                >
+                  <div className={scss.videoThumbnail}>
+                    <Image
+                      src={`https://img.youtube.com/vi/${video.key}/mqdefault.jpg`}
+                      alt={video.name}
+                      fill
+                      sizes="280px"
+                      quality={75}
+                      loading="lazy"
+                      style={{ objectFit: "cover" }}
+                    />
+                    <div className={scss.playIcon}>
+                      <PiPlayCircle size={50} />
                     </div>
-                  </button>
-                ))}
-              </div>
+                  </div>
+                  <p className={scss.videoName}>{video.name}</p>
+                </div>
+              ))}
             </div>
           </div>
         )}
@@ -152,9 +171,11 @@ export default function OneTv({ tvId }: OneTvProps) {
           <div className={scss.similarSection}>
             <h2>Similar</h2>
             <div className={scss.similarList}>
-              {similar.slice(0, 20).map((item: any) => (
-                <Card key={item.id} movie={item} selected="tv" />
-              ))}
+              <Suspense fallback={<CardSkeleton count={6} />}>
+                {similar.slice(0, 20).map((item: any) => (
+                  <Card key={item.id} movie={item} selected="tv" />
+                ))}
+              </Suspense>
             </div>
           </div>
         )}
@@ -163,9 +184,11 @@ export default function OneTv({ tvId }: OneTvProps) {
           <div className={scss.recommendationsSection}>
             <h2>Recommendations</h2>
             <div className={scss.recommendationsList}>
-              {recommendations.slice(0, 20).map((item: any) => (
-                <Card key={item.id} movie={item} selected="tv" />
-              ))}
+              <Suspense fallback={<CardSkeleton count={6} />}>
+                {recommendations.slice(0, 20).map((item: any) => (
+                  <Card key={item.id} movie={item} selected="tv" />
+                ))}
+              </Suspense>
             </div>
           </div>
         )}
@@ -175,13 +198,18 @@ export default function OneTv({ tvId }: OneTvProps) {
           <div className={scss.casts}>
             {credits.map((actor: any) => (
               <div key={actor.id} className={scss.cast}>
-                <img
+                <Image
                   src={
                     actor.profile_path
                       ? `https://image.tmdb.org/t/p/w185${actor.profile_path}`
                       : "/no-image.jpg"
                   }
                   alt={actor.name}
+                  width={150}
+                  height={150}
+                  quality={75}
+                  loading="lazy"
+                  style={{ borderRadius: "50%", objectFit: "cover" }}
                 />
                 <h4>{actor.name}</h4>
                 <p>{actor.character}</p>
@@ -219,4 +247,3 @@ export default function OneTv({ tvId }: OneTvProps) {
     </section>
   );
 }
-

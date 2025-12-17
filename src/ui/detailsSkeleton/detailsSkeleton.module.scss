@@ -1,0 +1,160 @@
+.container {
+  min-height: 100vh;
+  background-color: #0f1b35;
+  padding-bottom: 80px;
+}
+
+.backdrop {
+  width: 100%;
+  height: 100vh;
+  opacity: 0.3;
+}
+
+.mainContent {
+  display: flex;
+  gap: 30px;
+  margin-top: -550px;
+  position: relative;
+  padding: 0 20px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-bottom: 150px;
+}
+
+.poster {
+  flex-shrink: 0;
+}
+
+.details {
+  flex: 1;
+  min-width: 300px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.genres {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.rating {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.overview {
+  margin: 10px 0;
+}
+
+.extraInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.section {
+  margin-top: 60px;
+}
+
+.videosList {
+  display: flex;
+  gap: 20px;
+  overflow-x: auto;
+  padding: 10px 0 30px 0;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.videoCard {
+  flex: 0 0 auto;
+  width: 280px;
+}
+
+.cardsList {
+  display: flex;
+  gap: 20px;
+  overflow-x: auto;
+  padding: 10px 0 30px 0;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.card {
+  flex: 0 0 auto;
+  width: 230px;
+}
+
+.castList {
+  display: flex;
+  gap: 20px;
+  overflow-x: auto;
+  padding: 10px 0 30px 0;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.castCard {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 150px;
+}
+
+@media (max-width: 1024px) {
+  .mainContent {
+    margin-top: -420px;
+    gap: 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .mainContent {
+    margin-top: -360px;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .videoCard {
+    width: 240px;
+  }
+
+  .card {
+    width: 180px;
+  }
+
+  .castCard {
+    min-width: 120px;
+  }
+}
+
+@media (max-width: 480px) {
+  .mainContent {
+    margin-top: -260px;
+    padding: 0 12px;
+  }
+
+  .videoCard {
+    width: 220px;
+  }
+
+  .card {
+    width: 140px;
+  }
+}
+
