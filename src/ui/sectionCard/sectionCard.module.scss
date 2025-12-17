@@ -73,16 +73,15 @@
         display: flex;
         align-items: center;
         justify-content: center;
-
         transition: background 0.3s ease;
       }
 
       .btn-prev {
-        left: -60px;
+        left: -20px;
       }
 
       .btn-next {
-        right: -60px;
+        right: -20px;
       }
 
       .btn-prev:hover,
