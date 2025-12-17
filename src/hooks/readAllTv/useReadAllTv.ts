@@ -7,7 +7,7 @@ export const useReadAllTv = () => {
   return useQuery({
     queryKey: ["allTv"],
     queryFn: async () => {
-      const totalPages = 10;
+      const totalPages = 30;
       const requests = [];
 
       for (let i = 1; i <= totalPages; i++) {

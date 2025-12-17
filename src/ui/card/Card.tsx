@@ -40,8 +40,8 @@ const Card = ({ movie, selected }: CardProps) => {
         height={330}
         placeholder="empty"
         quality={75}
-        // loading="lazy"
-        loading="eager"
+        loading="lazy"
+        // loading="eager"
       />
 
       {movie.vote_average !== undefined && (
