@@ -23,28 +23,28 @@
 
       .toggleGroup {
         display: flex;
-        background: #1c1c1c;
+        background: white;
         border-radius: 20px;
         overflow: hidden;
 
         button {
+          margin: 4px;
           padding: 6px 14px;
           border: none;
           background: transparent;
-          color: #aaa;
+          color: black;
           cursor: pointer;
           font-size: 14px;
           transition: all 0.3s ease;
 
-          &:hover {
-            color: #fff;
-          }
+          // &:hover {
+          //   color: ;
+          // }
         }
-      }
-
-      .active {
-        background: #21d07a;
-        color: #000 !important;
+        .active {
+          background: linear-gradient(98.37deg, #b509bd 0.99%, #da2f68 100%);
+          color: white;
+        }
       }
     }
 
@@ -59,7 +59,6 @@
         top: 50%;
         transform: translateY(-50%);
         z-index: 100;
-
         width: 45px;
         height: 45px;
         border-radius: 50%;
