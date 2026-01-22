@@ -22,6 +22,10 @@ export const metadata: Metadata = {
     default: "Eco Movie - Discover Movies & TV Shows",
     template: "%s | Eco Movie",
   },
+  icons: {
+    icon: "https://movie.elcho.dev/assets/eco-movie-logo-a8_bjuTM.svg", // файл должен лежать в папке public/
+    apple: "https://movie.elcho.dev/assets/eco-movie-logo-a8_bjuTM.svg",
+  },
   description:
     "Discover millions of movies, TV shows and people. Explore trending, popular and top-rated content. Your ultimate destination for cinematic entertainment.",
   keywords: [
@@ -41,7 +45,7 @@ export const metadata: Metadata = {
     telephone: false,
   },
   metadataBase: new URL(
-    process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"
+    process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000",
   ),
   alternates: {
     canonical: "/",
