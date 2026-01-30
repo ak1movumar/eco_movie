@@ -7,7 +7,7 @@
   padding-block: 10px;
   background: var(--color-bg-alt, #090e1a90);
   backdrop-filter: blur(6px);
-  z-index: 100;
+  z-index: 150;
   box-shadow: 0 2px 8px #0004;
   transition: all ease 0.5s;
 
@@ -67,7 +67,7 @@
         }
       }
       span {
-        font-size: 1.2rem;
+        font-size: 1.8rem;
         color: var(--color-accent2, #da2f68);
         transition: color 0.2s;
         &:hover {
@@ -152,11 +152,12 @@
     }
   }
   @media (max-width: 450px) {
-    .header {
-      padding-block: 0;
-      padding: 65 8px;
-      height: 90px;
-    }
+    padding-bottom: 60px;
+    // .header {
+    //   padding-block: 0;
+    //   padding: 65 8px;
+    //   height: 90px;
+    // }
     .mainContainer {
       gap: 7px;
       .menu {

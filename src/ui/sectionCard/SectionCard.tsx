@@ -101,7 +101,7 @@ export default function SectionCard({
                     nextEl: nextRef.current,
                   }}
                   spaceBetween={16}
-                  slidesPerView={5}
+                  slidesPerView={2}
                   breakpoints={{
                     1400: { slidesPerView: 6 },
                     1200: { slidesPerView: 5 },

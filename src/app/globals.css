@@ -42,7 +42,7 @@
     padding: 0;
   }
   @media (max-width: 475px) {
-    max-width: 350px;
+    max-width: 340px;
     padding: 0;
   }
 }
