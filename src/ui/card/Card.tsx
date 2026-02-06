@@ -1,5 +1,7 @@
 "use client";
+
 import { useRouter } from "next/navigation";
+import { useCallback, useMemo, memo } from "react";
 import Image from "next/image";
 import scss from "./card.module.scss";
 import { buildStyles, CircularProgressbar } from "react-circular-progressbar";
@@ -20,28 +22,47 @@ interface CardProps {
   selected: "movie" | "tv";
 }
 
-const Card = ({ movie, selected }: CardProps) => {
+const TMDB_IMAGE_BASE = "https://image.tmdb.org/t/p/w500";
+
+const getRatingColor = (rating: number): string => {
+  if (rating >= 7) return "#21d07a";
+  if (rating >= 5) return "#d2d531";
+  return "#db2360";
+};
+
+const Card = memo(({ movie, selected }: CardProps) => {
   const { push } = useRouter();
 
-  // Movie же TV аты
-  const displayTitle = movie.title || movie.name || "Untitled";
+  const displayTitle = useMemo(
+    () => movie.title || movie.name || "Untitled",
+    [movie.title, movie.name],
+  );
+  const displayDate = useMemo(
+    () => movie.release_date || movie.first_air_date || "N/A",
+    [movie.release_date, movie.first_air_date],
+  );
+  const rating = useMemo(() => movie.vote_average || 0, [movie.vote_average]);
 
-  // Movie же TV дата
-  const displayDate = movie.release_date || movie.first_air_date || "N/A";
-
-  const rating = movie.vote_average || 0;
+  const handleNavigate = useCallback(() => {
+    push(`/${selected}/${movie.id}`);
+  }, [push, selected, movie.id]);
 
   return (
-    <div className={scss.card} onClick={() => push(`/${selected}/${movie.id}`)}>
+    <div
+      className={scss.card}
+      onClick={handleNavigate}
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => e.key === "Enter" && handleNavigate()}
+    >
       <Image
-        src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+        src={`${TMDB_IMAGE_BASE}${movie.poster_path}`}
         alt={displayTitle}
         width={220}
         height={330}
         placeholder="empty"
         quality={75}
         loading="lazy"
-        // loading="eager"
       />
 
       {movie.vote_average !== undefined && (
@@ -52,8 +73,7 @@ const Card = ({ movie, selected }: CardProps) => {
             text={rating.toFixed(1)}
             styles={buildStyles({
               textSize: "30px",
-              pathColor:
-                rating >= 7 ? "#21d07a" : rating >= 5 ? "#d2d531" : "#db2360",
+              pathColor: getRatingColor(rating),
               textColor: "#fff",
               trailColor: "#333",
               backgroundColor: "#101c3a",
@@ -68,6 +88,8 @@ const Card = ({ movie, selected }: CardProps) => {
       </div>
     </div>
   );
-};
+});
+
+Card.displayName = "Card";
 
 export default Card;

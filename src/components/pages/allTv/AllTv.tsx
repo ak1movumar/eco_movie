@@ -1,11 +1,26 @@
 "use client";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useReadAllTv } from "@/hooks/readAllTv/useReadAllTv";
 import scss from "./allTv.module.scss";
 import MoviesCard from "@/ui/moviesCard/MoviesCard";
+import { FiArrowUp } from "react-icons/fi";
 
 export default function AllTv() {
   const { data: tv, isLoading } = useReadAllTv();
+  const [showScrollTop, setShowScrollTop] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowScrollTop(window.scrollY > 300);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   // состояние фильтра и сортировки
   const [selectedGenre, setSelectedGenre] = useState<string>("");
@@ -34,8 +49,8 @@ export default function AllTv() {
       result = result.filter((item) =>
         item.genre_ids?.some(
           (id: number) =>
-            genresMap[id]?.toLowerCase() === selectedGenre.toLowerCase()
-        )
+            genresMap[id]?.toLowerCase() === selectedGenre.toLowerCase(),
+        ),
       );
     }
 
@@ -46,7 +61,7 @@ export default function AllTv() {
       result.sort(
         (a, b) =>
           new Date(b.first_air_date).getTime() -
-          new Date(a.first_air_date).getTime()
+          new Date(a.first_air_date).getTime(),
       );
     }
 
@@ -97,6 +112,17 @@ export default function AllTv() {
           </div>
         </div>
       </div>
+
+      {showScrollTop && (
+        <button
+          className={scss.scrollToTop}
+          onClick={scrollToTop}
+          aria-label="Scroll to top"
+          title="Back to top"
+        >
+          <FiArrowUp />
+        </button>
+      )}
     </div>
   );
 }

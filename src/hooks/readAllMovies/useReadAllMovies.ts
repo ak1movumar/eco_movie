@@ -7,18 +7,34 @@ export const useReadAllMovies = () => {
   return useQuery({
     queryKey: ["allMovies"],
     queryFn: async () => {
-      const totalPages = 14;
-      const requests = [];
+      const allMovies = [];
+      let page = 1;
+      let hasMore = true;
 
-      for (let i = 1; i <= totalPages; i++) {
-        requests.push(
-          axios.get(
-            `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&language=en-US&page=${i}`
-          )
-        );
+      while (hasMore) {
+        try {
+          const response = await axios.get(
+            `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&language=en-US&page=${page}`,
+          );
+
+          allMovies.push(...(response.data.results || []));
+
+          // TMDB API does not allow page > 500 — cap total pages and guard missing values
+          const totalPages: number = Math.min(
+            Number(response.data?.total_pages) || page,
+            500,
+          );
+
+          if (page >= totalPages) {
+            hasMore = false;
+          } else {
+            page++;
+          }
+        } catch (error) {
+          console.error(`Error fetching movies page ${page}:`, error);
+          hasMore = false;
+        }
       }
-      const responses = await Promise.all(requests);
-      const allMovies = responses.flatMap((res) => res.data.results);
 
       return allMovies;
     },
