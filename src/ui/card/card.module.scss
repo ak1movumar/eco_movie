@@ -1,211 +1,209 @@
 .card {
   display: flex;
-  align-items: flex-start;
   flex-direction: column;
-  justify-content: space-between;
   border-radius: 12px;
-  gap: 20px;
   width: 100%;
-  min-width: unset;
-  height: 450px;
+  max-width: 220px;
   position: relative;
-  transition:
-    transform 0.3s ease,
-    box-shadow 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   overflow: hidden;
-  background-color: #111;
-  flex-shrink: 0;
+  background: linear-gradient(to bottom, #1a1a2e 0%, #0f0f1e 100%);
   cursor: pointer;
-
-  img {
-    width: 100%;
-    height: 360px;
-    object-fit: cover;
-    border-radius: 10px;
-  }
+  flex-shrink: 0;
 
   &:hover {
-    transform: scale(1.05);
-    box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 
+      0 12px 24px rgba(0, 0, 0, 0.4),
+      0 0 20px rgba(218, 47, 104, 0.3);
+
+    .poster {
+      transform: scale(1.05);
+    }
+
+    .title {
+      color: #da2f68;
+    }
+  }
+
+  &:focus {
+    outline: 3px solid #b618ba;
+    outline-offset: 4px;
+  }
+
+  &:active {
+    transform: translateY(-4px) scale(0.98);
+  }
+
+  .imageWrapper {
+    position: relative;
+    width: 100%;
+    height: 330px;
+    overflow: hidden;
+    border-radius: 12px 12px 0 0;
+    background: #1a1a2e;
+  }
+
+  .poster {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
   }
 
   .scale {
     position: absolute;
-    bottom: 100px;
-    left: 10px;
-    width: 50px;
-    height: 50px;
+    bottom: 0px;
+    left: 12px;
+    width: 54px;
+    height: 54px;
+    background: #04152d;
+    border-radius: 50%;
+    padding: 3px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+    z-index: 10;
   }
 
-  .genres {
-    position: absolute;
-    bottom: 90px;
-    right: 4px;
+  .info {
+    padding: 32px 12px 16px;
     display: flex;
-    align-items: center;
-    gap: 5px;
-    flex-wrap: wrap;
-
-    span {
-      background: #da2f68;
-      padding: 5px 8px;
-      border-radius: 6px;
-      font-size: 11px;
-      font-weight: 300;
-      color: white;
-    }
+    flex-direction: column;
+    gap: 6px;
+    background: linear-gradient(to bottom, #1a1a2e 0%, #0f0f1e 100%);
   }
 
   .title {
-    padding: 10px;
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #fff;
+    line-height: 1.4;
+    margin: 0;
+    transition: color 0.3s;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-height: 44px;
+  }
 
-    h4 {
-      font-size: 16px;
-      color: #fff;
-      font-weight: 600;
+  .date {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 13px;
+    font-weight: 400;
+  }
+
+  // Tablet
+  @media (max-width: 1024px) {
+    max-width: 180px;
+
+    .imageWrapper {
+      height: 270px;
     }
 
-    p {
-      color: #ffffff67;
-      font-size: 13px;
+    .scale {
+      width: 48px;
+      height: 48px;
+      left: 10px;
+    }
+
+    .info {
+      padding: 28px 10px 14px;
+    }
+
+    .title {
+      font-size: 15px;
+      min-height: 42px;
+    }
+
+    .date {
+      font-size: 12px;
     }
   }
 
-  @media (max-width: 1024px) {
-    width: 180px;
-    min-width: 180px;
-    height: 350px;
+  // Mobile Large
+  @media (max-width: 768px) {
+    max-width: 160px;
 
-    img {
-      height: 280px;
+    .imageWrapper {
+      height: 240px;
+    }
+
+    .scale {
+      width: 44px;
+      height: 44px;
+      left: 8px;
+    }
+
+    .info {
+      padding: 26px 10px 12px;
+    }
+
+    .title {
+      font-size: 14px;
+      min-height: 40px;
+    }
+
+    .date {
+      font-size: 11px;
+    }
+  }
+
+  // Mobile
+  @media (max-width: 480px) {
+    max-width: 140px;
+
+    .imageWrapper {
+      height: 210px;
     }
 
     .scale {
       width: 40px;
       height: 40px;
-      bottom: 80px;
+      bottom: 0px;
+      left: 8px;
     }
 
-    .genres span {
-      font-size: 10px;
-      padding: 4px 6px;
+    .info {
+      padding: 24px 8px 10px;
     }
 
-    .title h4 {
-      font-size: 14px;
+    .title {
+      font-size: 13px;
+      min-height: 38px;
+    }
+
+    .date {
+      font-size: 11px;
+    }
+
+    &:hover {
+      transform: none;
+      box-shadow: none;
+
+      .poster {
+        transform: none;
+      }
     }
   }
 
-  @media (max-width: 768px) {
-    width: 160px;
-    min-width: 160px;
-    height: 320px;
+  // Extra Small Mobile
+  @media (max-width: 380px) {
+    max-width: 130px;
 
-    img {
-      height: 250px;
+    .imageWrapper {
+      height: 195px;
     }
 
     .scale {
       width: 38px;
       height: 38px;
-      bottom: 80px;
+      bottom: -0px;
     }
 
-    .genres {
-      bottom: 75px;
-      right: 3px;
-      gap: 3px;
-    }
-
-    .genres span {
-      font-size: 9px;
-      padding: 3px 5px;
-    }
-
-    .title h4 {
-      font-size: 13px;
-    }
-  }
-
-  @media (max-width: 480px) {
-    width: 160px;
-    min-width: 140px;
-    height: 310px;
-
-    img {
-      width: 100%;
-      height: 240px;
-    }
-
-    .scale {
-      width: 32px;
-      height: 32px;
-      bottom: 80px;
-    }
-
-    .genres {
-      bottom: 60px;
-      gap: 2px;
-    }
-
-    .genres span {
-      font-size: 8px;
-      padding: 2px 4px;
-    }
-
-    .title h4 {
+    .title {
       font-size: 12px;
-    }
-
-    .title p {
-      font-size: 11px;
-    }
-
-    &:hover {
-      transform: none;
-      box-shadow: none;
-    }
-  }
-  @media (max-width: 347px) {
-    width: 160px;
-    min-width: 100px;
-    height: 340px;
-
-    img {
-      width: 100%;
-      height: 280px;
-    }
-
-    .scale {
-      width: 32px;
-      height: 32px;
-      bottom: 80px;
-    }
-
-    .genres {
-      bottom: 60px;
-      gap: 2px;
-    }
-
-    .genres span {
-      font-size: 8px;
-      padding: 2px 4px;
-    }
-
-    .title h4 {
-      font-size: 12px;
-    }
-
-    .title p {
-      font-size: 11px;
-    }
-
-    &:hover {
-      transform: none;
-      box-shadow: none;
+      min-height: 36px;
     }
   }
 }

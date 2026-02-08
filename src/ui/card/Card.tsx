@@ -5,6 +5,7 @@ import { useCallback, useMemo, memo } from "react";
 import Image from "next/image";
 import scss from "./card.module.scss";
 import { buildStyles, CircularProgressbar } from "react-circular-progressbar";
+import "react-circular-progressbar/dist/styles.css";
 
 interface ICard {
   id: number;
@@ -23,11 +24,27 @@ interface CardProps {
 }
 
 const TMDB_IMAGE_BASE = "https://image.tmdb.org/t/p/w500";
+const PLACEHOLDER_IMAGE = "/placeholder-poster.jpg"; // добавьте placeholder в public
 
 const getRatingColor = (rating: number): string => {
   if (rating >= 7) return "#21d07a";
   if (rating >= 5) return "#d2d531";
   return "#db2360";
+};
+
+const formatDate = (dateString: string): string => {
+  if (!dateString || dateString === "N/A") return "N/A";
+  
+  try {
+    const date = new Date(dateString);
+    return date.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+    });
+  } catch {
+    return dateString;
+  }
 };
 
 const Card = memo(({ movie, selected }: CardProps) => {
@@ -37,56 +54,87 @@ const Card = memo(({ movie, selected }: CardProps) => {
     () => movie.title || movie.name || "Untitled",
     [movie.title, movie.name],
   );
-  const displayDate = useMemo(
-    () => movie.release_date || movie.first_air_date || "N/A",
-    [movie.release_date, movie.first_air_date],
+
+  const displayDate = useMemo(() => {
+    const rawDate = movie.release_date || movie.first_air_date || "N/A";
+    return formatDate(rawDate);
+  }, [movie.release_date, movie.first_air_date]);
+
+  const rating = useMemo(
+    () => Math.round((movie.vote_average || 0) * 10) / 10,
+    [movie.vote_average],
   );
-  const rating = useMemo(() => movie.vote_average || 0, [movie.vote_average]);
+
+  const posterUrl = useMemo(
+    () =>
+      movie.poster_path
+        ? `${TMDB_IMAGE_BASE}${movie.poster_path}`
+        : PLACEHOLDER_IMAGE,
+    [movie.poster_path],
+  );
 
   const handleNavigate = useCallback(() => {
     push(`/${selected}/${movie.id}`);
   }, [push, selected, movie.id]);
 
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        handleNavigate();
+      }
+    },
+    [handleNavigate],
+  );
+
   return (
-    <div
+    <article
       className={scss.card}
       onClick={handleNavigate}
       role="button"
       tabIndex={0}
-      onKeyDown={(e) => e.key === "Enter" && handleNavigate()}
+      onKeyDown={handleKeyDown}
+      aria-label={`View details for ${displayTitle}`}
     >
-      <Image
-        src={`${TMDB_IMAGE_BASE}${movie.poster_path}`}
-        alt={displayTitle}
-        width={220}
-        height={330}
-        placeholder="empty"
-        quality={75}
-        loading="lazy"
-      />
+      <div className={scss.imageWrapper}>
+        <Image
+          src={posterUrl}
+          alt={displayTitle}
+          width={220}
+          height={330}
+          sizes="(max-width: 480px) 140px, (max-width: 768px) 160px, (max-width: 1024px) 180px, 220px"
+          placeholder="blur"
+          blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAUABQDASIAAhEBAxEB/8QAGAAAAwEBAAAAAAAAAAAAAAAAAAQFBgP/xAAjEAACAQQBBAMAAAAAAAAAAAABAgMABAUREiExQQYTIlFh/8QAFgEBAQEAAAAAAAAAAAAAAAAAAgAB/8QAGREAAwEBAQAAAAAAAAAAAAAAAAECERIh/9oADAMBAAIRAxEAPwDn5TkryLJbvG8kaAKGPfJ61z8dykl1mY/dZVt5ZpXLuU6x16VXuoIb/LwwSyO0jt3bvT+Hw4s7U3UcmIuLxz16lBU0rbdUTFppaA8hx/IJgfOYiU/F2BDgfprTkIUsgMjBAe/xqpo0dF+BH//Z"
+          quality={80}
+          loading="lazy"
+          className={scss.poster}
+        />
 
-      {movie.vote_average !== undefined && (
-        <div className={scss.scale}>
-          <CircularProgressbar
-            value={rating}
-            maxValue={10}
-            text={rating.toFixed(1)}
-            styles={buildStyles({
-              textSize: "30px",
-              pathColor: getRatingColor(rating),
-              textColor: "#fff",
-              trailColor: "#333",
-              backgroundColor: "#101c3a",
-            })}
-          />
-        </div>
-      )}
-
-      <div className={scss.title}>
-        <h4>{displayTitle}</h4>
-        <p>{displayDate}</p>
+        {rating > 0 && (
+          <div className={scss.scale} aria-label={`Rating: ${rating} out of 10`}>
+            <CircularProgressbar
+              value={rating}
+              maxValue={10}
+              text={rating.toFixed(1)}
+              styles={buildStyles({
+                textSize: "34px",
+                pathColor: getRatingColor(rating),
+                textColor: "#fff",
+                trailColor: "rgba(255, 255, 255, 0.1)",
+                backgroundColor: "#04152d",
+              })}
+            />
+          </div>
+        )}
       </div>
-    </div>
+
+      <div className={scss.info}>
+        <h3 className={scss.title}>{displayTitle}</h3>
+        <time className={scss.date} dateTime={movie.release_date || movie.first_air_date}>
+          {displayDate}
+        </time>
+      </div>
+    </article>
   );
 });
 

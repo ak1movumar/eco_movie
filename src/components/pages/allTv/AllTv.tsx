@@ -4,10 +4,25 @@ import { useReadAllTv } from "@/hooks/readAllTv/useReadAllTv";
 import scss from "./allTv.module.scss";
 import MoviesCard from "@/ui/moviesCard/MoviesCard";
 import { FiArrowUp } from "react-icons/fi";
+import { useInView } from "react-intersection-observer";
 
 export default function AllTv() {
-  const { data: tv, isLoading } = useReadAllTv();
+  const { 
+    data, 
+    isLoading,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage
+  } = useReadAllTv();
+  
   const [showScrollTop, setShowScrollTop] = useState(false);
+  const { ref, inView } = useInView();
+
+  useEffect(() => {
+    if (inView && hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -22,11 +37,9 @@ export default function AllTv() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  // состояние фильтра и сортировки
   const [selectedGenre, setSelectedGenre] = useState<string>("");
   const [sortBy, setSortBy] = useState<string>("");
 
-  // Маппинг жанров (примерный, можно расширить)
   const genresMap: Record<number, string> = {
     28: "Action",
     12: "Adventure",
@@ -38,13 +51,14 @@ export default function AllTv() {
     10751: "Family",
   };
 
-  // фильтрация и сортировка данных
+  const allTv = useMemo(() => {
+    if (!data?.pages) return [];
+    return data.pages.flatMap(page => page.results || []);
+  }, [data]);
+
   const filteredAndSortedTv = useMemo(() => {
-    if (!tv) return [];
+    let result = [...allTv];
 
-    let result = [...tv];
-
-    // фильтр по жанру
     if (selectedGenre) {
       result = result.filter((item) =>
         item.genre_ids?.some(
@@ -54,7 +68,6 @@ export default function AllTv() {
       );
     }
 
-    // сортировка
     if (sortBy === "rating") {
       result.sort((a, b) => b.vote_average - a.vote_average);
     } else if (sortBy === "date") {
@@ -66,7 +79,7 @@ export default function AllTv() {
     }
 
     return result;
-  }, [tv, selectedGenre, sortBy]);
+  }, [allTv, selectedGenre, sortBy]);
 
   return (
     <div className={scss.container}>
@@ -109,6 +122,12 @@ export default function AllTv() {
               toggle="day | week"
               selected="tv"
             />
+          </div>
+
+          <div ref={ref} style={{ height: '20px', margin: '20px 0' }}>
+            {isFetchingNextPage && (
+              <p style={{ textAlign: 'center' }}>Загрузка...</p>
+            )}
           </div>
         </div>
       </div>

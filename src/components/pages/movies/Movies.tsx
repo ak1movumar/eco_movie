@@ -4,10 +4,28 @@ import scss from "./movies.module.scss";
 import MoviesCard from "@/ui/moviesCard/MoviesCard";
 import { useMemo, useState, useEffect } from "react";
 import { FiArrowUp } from "react-icons/fi";
+import { useInView } from "react-intersection-observer";
 
 export default function Movies() {
-  const { data: movies, isLoading, isError, error } = useReadAllMovies();
+  const { 
+    data, 
+    isLoading, 
+    isError, 
+    error,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage
+  } = useReadAllMovies();
+  
   const [showScrollTop, setShowScrollTop] = useState(false);
+  const { ref, inView } = useInView();
+
+  // Автозагрузка при прокрутке
+  useEffect(() => {
+    if (inView && hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -26,11 +44,9 @@ export default function Movies() {
     console.error("Ошибка загрузки фильмов:", error);
   }
 
-  // состояние фильтра и сортировки
   const [selectedGenre, setSelectedGenre] = useState<string>("");
   const [sortBy, setSortBy] = useState<string>("");
 
-  // Маппинг жанров (примерный, можно расширить)
   const genresMap: Record<number, string> = {
     28: "Action",
     12: "Adventure",
@@ -42,13 +58,16 @@ export default function Movies() {
     10751: "Family",
   };
 
-  // фильтрация и сортировка данных
+  // Объединяем все страницы в один массив
+  const allMovies = useMemo(() => {
+    if (!data?.pages) return [];
+    return data.pages.flatMap(page => page.results || []);
+  }, [data]);
+
+  // Фильтрация и сортировка
   const filteredAndSortedMovies = useMemo(() => {
-    if (!movies) return [];
+    let result = [...allMovies];
 
-    let result = [...movies];
-
-    // фильтр по жанру
     if (selectedGenre) {
       result = result.filter((item) =>
         item.genre_ids?.some(
@@ -58,19 +77,18 @@ export default function Movies() {
       );
     }
 
-    // сортировка
     if (sortBy === "rating") {
       result.sort((a, b) => b.vote_average - a.vote_average);
     } else if (sortBy === "date") {
       result.sort(
         (a, b) =>
-          new Date(b.first_air_date).getTime() -
-          new Date(a.first_air_date).getTime(),
+          new Date(b.release_date || b.first_air_date).getTime() -
+          new Date(a.release_date || a.first_air_date).getTime(),
       );
     }
 
     return result;
-  }, [movies, selectedGenre, sortBy]);
+  }, [allMovies, selectedGenre, sortBy]);
 
   return (
     <div className={scss.container}>
@@ -103,16 +121,22 @@ export default function Movies() {
               </select>
             </div>
           </div>
+          
           <div className={scss.movies}>
-            {
-              <MoviesCard
-                isLoading={isLoading}
-                data={filteredAndSortedMovies}
-                title="Movies"
-                toggle="day | week"
-                selected="movie" // кош
-              />
-            }
+            <MoviesCard
+              isLoading={isLoading}
+              data={filteredAndSortedMovies}
+              title="Movies"
+              toggle="day | week"
+              selected="movie"
+            />
+          </div>
+
+          {/* Триггер для загрузки следующей страницы */}
+          <div ref={ref} style={{ height: '20px', margin: '20px 0' }}>
+            {isFetchingNextPage && (
+              <p style={{ textAlign: 'center' }}>Загрузка...</p>
+            )}
           </div>
         </div>
       </div>
