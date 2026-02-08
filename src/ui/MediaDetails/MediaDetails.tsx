@@ -182,7 +182,7 @@ export default function MediaDetails({
           alt={`${title} backdrop`}
           fill
           priority
-          quality={85}
+          quality={75}
           sizes="100vw"
           className={scss.backdropImage}
         />
