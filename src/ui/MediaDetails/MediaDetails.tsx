@@ -184,6 +184,7 @@ export default function MediaDetails({
           priority
           quality={75}
           sizes="100vw"
+          unoptimized
           className={scss.backdropImage}
         />
         <div className={scss.backdropGradient} />
@@ -200,6 +201,7 @@ export default function MediaDetails({
               height={450}
               quality={75}
               priority
+              unoptimized
               className={scss.poster}
             />
           </div>
@@ -340,6 +342,7 @@ export default function MediaDetails({
                       sizes="(max-width: 480px) 200px, (max-width: 768px) 240px, 280px"
                       quality={75}
                       loading="lazy"
+                      unoptimized
                     />
                     <div className={scss.playOverlay}>
                       <PiPlayCircle size={56} />
@@ -371,7 +374,7 @@ export default function MediaDetails({
                       height={150}
                       quality={75}
                       loading="lazy"
-                      unoptimized={!actor.profile_path}
+                      unoptimized
                     />
                   </div>
                   <h4 className={scss.castName}>{actor.name}</h4>

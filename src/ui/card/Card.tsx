@@ -94,6 +94,7 @@ const Card = memo(({ movie, selected }: CardProps) => {
           blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAUABQDASIAAhEBAxEB/8QAGAAAAwEBAAAAAAAAAAAAAAAAAAQFBgP/xAAjEAACAQQBBAMAAAAAAAAAAAABAgMABAUREiExQQYTIlFh/8QAFgEBAQEAAAAAAAAAAAAAAAAAAgAB/8QAGREAAwEBAQAAAAAAAAAAAAAAAAECERIh/9oADAMBAAIRAxEAPwDn5TkryLJbvG8kaAKGPfJ61z8dykl1mY/dZVt5ZpXLuU6x16VXuoIb/LwwSyO0jt3bvT+Hw4s7U3UcmIuLxz16lBU0rbdUTFppaA8hx/IJgfOYiU/F2BDgfprTkIUsgMjBAe/xqpo0dF+BH//Z"
           quality={75}
           loading="lazy"
+          unoptimized
           className={scss.poster}
         />
 
