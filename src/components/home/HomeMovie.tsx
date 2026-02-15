@@ -34,6 +34,7 @@ export default function HomeMovie() {
       try {
         const res = await axios.get(
           `${BASE_HOST}/trending/tv/day?api_key=${API_KEY}&language=en-US`,
+          { timeout: 10000 },
         );
         if (!mounted) return;
 

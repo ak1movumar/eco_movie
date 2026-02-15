@@ -17,11 +17,19 @@ export const useReadMovie = () => {
   const query = useQuery({
     queryKey: ["trending", "movie", period],
     queryFn: async () => {
-      const response = await axios.get(
-        `${BASE_HOST}/trending/movie/${period}?api_key=${API_KEY}&language=en-US`,
-      );
-      return response.data.results;
+      try {
+        const response = await axios.get(
+          `${BASE_HOST}/trending/movie/${period}?api_key=${API_KEY}&language=en-US`,
+          { timeout: 10000 },
+        );
+        return response.data.results || [];
+      } catch (error) {
+        console.error("Ошибка загрузки трендовых фильмов:", error);
+        throw error;
+      }
     },
+    retry: 2,
+    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
   });
 
   return {

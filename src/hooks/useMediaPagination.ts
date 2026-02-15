@@ -42,8 +42,15 @@ export const useMediaPagination = ({
   return useInfiniteQuery({
     queryKey,
     queryFn: async ({ pageParam = 1 }) => {
-      const response = await axios.get(buildUrl(pageParam));
-      return response.data;
+      try {
+        const response = await axios.get(buildUrl(pageParam), {
+          timeout: 10000,
+        });
+        return response.data;
+      } catch (error) {
+        console.error(`Ошибка загрузки ${endpoint}:`, error);
+        throw error;
+      }
     },
     getNextPageParam: (lastPage, allPages) => {
       const nextPage = allPages.length + 1;
@@ -53,5 +60,7 @@ export const useMediaPagination = ({
         : undefined;
     },
     initialPageParam: 1,
+    retry: 2,
+    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
   });
 };
