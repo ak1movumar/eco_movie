@@ -190,6 +190,7 @@ $breakpoint-mobile: 480px;
 
       &:active {
         transform: scale(0.95);
+        color: $text-hover;
       }
 
       &:focus {
