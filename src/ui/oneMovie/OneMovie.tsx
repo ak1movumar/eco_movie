@@ -8,15 +8,18 @@ interface OneMovieProps {
   movieId: string;
 }
 
+/**
+ * Компонент для отображения полной информации о фильме
+ */
 export default function OneMovie({ movieId }: OneMovieProps) {
   const { data, isLoading, isError } = useOneMovie(movieId);
 
-  // Преобразуем данные из формата API в формат компонента
+  // Преобразуем данные из формата хука в формат компонента MediaDetails
   const adaptedData = useMemo(() => {
     if (!data) return undefined;
 
     return {
-      media: data.movie, // переименовываем movie -> media
+      media: data.media,
       credits: data.credits,
       videos: data.videos,
       similar: data.similar,

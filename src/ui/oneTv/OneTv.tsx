@@ -8,15 +8,18 @@ interface OneTvProps {
   tvId: string;
 }
 
+/**
+ * Компонент для отображения полной информации о ТВ-шоу
+ */
 export default function OneTv({ tvId }: OneTvProps) {
   const { data, isLoading, isError } = useOneTv(tvId);
 
-  // Преобразуем данные из формата API в формат компонента
+  // Преобразуем данные из формата хука в формат компонента MediaDetails
   const adaptedData = useMemo(() => {
     if (!data) return undefined;
 
     return {
-      media: data.tv, // переименовываем tv -> media
+      media: data.media,
       credits: data.credits,
       videos: data.videos,
       similar: data.similar,

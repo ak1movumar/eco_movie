@@ -11,6 +11,9 @@ interface SearchResultsProps {
   query: string;
 }
 
+/**
+ * Скелет загрузки для отображения во время загрузки результатов
+ */
 function SearchSkeleton() {
   return (
     <SkeletonTheme baseColor="#1a1a2e" highlightColor="#16213e">
@@ -27,42 +30,53 @@ function SearchSkeleton() {
   );
 }
 
+/**
+ * Компонент для отображения результатов поиска фильмов и ТВ-шоу
+ */
 export default function SearchResults({ query }: SearchResultsProps) {
   const { data, isLoading, isError } = useSearch(query);
 
+  // Состояние загрузки
   if (isLoading) {
     return (
       <div className={scss.container}>
         <div className="container">
-          <h1 className={scss.title}>Search results of '{query}'</h1>
+          <h1 className={scss.title}>Результаты поиска для '{query}'</h1>
           <SearchSkeleton />
         </div>
       </div>
     );
   }
 
+  // Состояние ошибки
   if (isError) {
     return (
       <div className={scss.container}>
         <div className="container">
-          <h2 className={scss.error}>Error occurred while searching</h2>
+          <h2 className={scss.error}>
+            Ошибка при поиске. Пожалуйста, попробуйте позже другой запрос.
+          </h2>
         </div>
       </div>
     );
   }
 
+  // Объединяем результаты фильмов и ТВ-шоу
   const allResults = [
-    ...(data?.movies?.map((item: any) => ({ ...item, mediaType: "movie" })) || []),
+    ...(data?.movies?.map((item: any) => ({ ...item, mediaType: "movie" })) ||
+      []),
     ...(data?.tv?.map((item: any) => ({ ...item, mediaType: "tv" })) || []),
   ];
 
   return (
     <div className={scss.container}>
       <div className="container">
-        <h1 className={scss.title}>Search results of '{query}'</h1>
+        <h1 className={scss.title}>Результаты поиска для '{query}'</h1>
 
         {allResults.length === 0 ? (
-          <p className={scss.noResults}>No results found for '{query}'</p>
+          <p className={scss.noResults}>
+            По запросу '{query}' ничего не найдено 😔
+          </p>
         ) : (
           <div className={scss.results}>
             <Suspense fallback={<SearchSkeleton />}>
@@ -80,4 +94,3 @@ export default function SearchResults({ query }: SearchResultsProps) {
     </div>
   );
 }
-

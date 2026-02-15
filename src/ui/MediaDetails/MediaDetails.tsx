@@ -182,7 +182,7 @@ export default function MediaDetails({
           alt={`${title} backdrop`}
           fill
           priority
-          // quality={75}
+          quality={75}
           sizes="100vw"
           className={scss.backdropImage}
         />
@@ -198,7 +198,7 @@ export default function MediaDetails({
               alt={`${title} poster`}
               width={300}
               height={450}
-              // quality={90}
+              quality={75}
               priority
               className={scss.poster}
             />
@@ -338,7 +338,7 @@ export default function MediaDetails({
                       alt={video.name}
                       fill
                       sizes="(max-width: 480px) 200px, (max-width: 768px) 240px, 280px"
-                      // quality={75}
+                      quality={75}
                       loading="lazy"
                     />
                     <div className={scss.playOverlay}>
@@ -369,8 +369,9 @@ export default function MediaDetails({
                       alt={actor.name}
                       width={150}
                       height={150}
-                      // quality={75}
+                      quality={75}
                       loading="lazy"
+                      unoptimized={!actor.profile_path}
                     />
                   </div>
                   <h4 className={scss.castName}>{actor.name}</h4>

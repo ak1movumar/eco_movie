@@ -2,6 +2,9 @@
 import SectionCard from "@/ui/sectionCard/SectionCard";
 import { usePopular } from "@/hooks/popular/usePopular";
 
+/**
+ * Компонент для отображения популярного контента с выбором типа медиа
+ */
 export default function Popular() {
   const {
     data: popularMovies,
@@ -12,7 +15,7 @@ export default function Popular() {
 
   return (
     <SectionCard
-      title="Popular"
+      title="Популярное"
       isLoading={isLoading}
       data={popularMovies || []}
       mediaType={mediaType}

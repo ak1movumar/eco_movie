@@ -17,11 +17,13 @@
       display: flex;
       flex-wrap: wrap;
       gap: 24px;
+      justify-content: center;
       a {
         color: #b0b0ff;
         font-weight: 500;
         position: relative;
         transition: color 0.2s;
+        white-space: nowrap;
         &:hover {
           color: var(--color-accent2, #da2f68);
         }
@@ -30,6 +32,8 @@
     .icons {
       display: flex;
       gap: 24px;
+      flex-wrap: wrap;
+      justify-content: center;
       span {
         width: 46px;
         height: 46px;
@@ -40,7 +44,10 @@
         background: #191b22cc;
         color: #fff;
         font-size: 1.45rem;
-        transition: background 0.25s, color 0.2s, transform 0.2s;
+        transition:
+          background 0.25s,
+          color 0.2s,
+          transform 0.2s;
         cursor: pointer;
         &:hover {
           background: var(--color-btn-hover, #da2f68);
@@ -51,16 +58,49 @@
     }
   }
   @media (max-width: 700px) {
+    padding: 32px 0 16px 0;
     .mainContainer {
       gap: 18px;
+      p {
+        font-size: 0.9rem;
+        line-height: 1.5;
+      }
       .tags {
-        gap: 11px;
+        gap: 8px 12px;
+        a {
+          font-size: 0.85rem;
+        }
       }
       .icons {
-        gap: 14px;
+        gap: 12px;
         span {
           width: 36px;
           height: 36px;
+          font-size: 1.2rem;
+        }
+      }
+    }
+  }
+  @media (max-width: 480px) {
+    padding: 24px 0 12px 0;
+    .mainContainer {
+      gap: 14px;
+      p {
+        font-size: 0.8rem;
+        line-height: 1.4;
+      }
+      .tags {
+        gap: 6px 8px;
+        a {
+          font-size: 0.75rem;
+        }
+      }
+      .icons {
+        gap: 10px;
+        span {
+          width: 32px;
+          height: 32px;
+          font-size: 1rem;
         }
       }
     }

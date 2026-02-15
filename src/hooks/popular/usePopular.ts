@@ -1,11 +1,16 @@
+// Хук для загрузки популярного контента
 "use client";
-import { API_KEY } from "@/constants/api";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import { API_KEY, BASE_HOST } from "@/constants/api";
 import { useState } from "react";
 
 type MediaType = "movie" | "tv";
 
+/**
+ * Хук для загрузки популярного контента с возможностью выбора типа медиа
+ * @returns объект с данными, статусом и методом изменения типа медиа
+ */
 export const usePopular = () => {
   const [mediaType, setMediaType] = useState<MediaType>("movie");
 
@@ -13,7 +18,7 @@ export const usePopular = () => {
     queryKey: ["popular", mediaType],
     queryFn: async () => {
       const response = await axios.get(
-        `https://api.themoviedb.org/3/${mediaType}/popular?api_key=${API_KEY}`
+        `${BASE_HOST}/${mediaType}/popular?api_key=${API_KEY}&language=en-US`,
       );
       return response.data.results;
     },

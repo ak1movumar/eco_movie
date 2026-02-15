@@ -1,10 +1,8 @@
-import Movies from '@/components/pages/movies/Movies';
-import React from 'react';
+import Movies from "@/components/pages/movies/Movies";
 
-const page = () => {
-    return (
-        <Movies/>
-    );
-};
-
-export default page;
+/**
+ * Страница со всеми фильмами и фильтрацией
+ */
+export default function MoviesPage() {
+  return <Movies />;
+}

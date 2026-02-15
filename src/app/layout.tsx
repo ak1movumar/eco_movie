@@ -19,26 +19,26 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "Eco Movie - Discover Movies & TV Shows",
-    template: "%s | Eco Movie",
+    default: "EcoMovie - Откройте Фильмы и ТВ-шоу",
+    template: "%s | EcoMovie",
   },
   icons: {
-    icon: "https://movie.elcho.dev/assets/eco-movie-logo-a8_bjuTM.svg", // файл должен лежать в папке public/
+    icon: "https://movie.elcho.dev/assets/eco-movie-logo-a8_bjuTM.svg",
     apple: "https://movie.elcho.dev/assets/eco-movie-logo-a8_bjuTM.svg",
   },
   description:
-    "Discover millions of movies, TV shows and people. Explore trending, popular and top-rated content. Your ultimate destination for cinematic entertainment.",
+    "Откройте миллионы фильмов, ТВ-шоу и актёров. Исследуйте тренды, популярное и топ-рейтинговое содержание. Ваше удивительное место для развлечений на основе кино.",
   keywords: [
-    "movies",
-    "TV shows",
-    "cinema",
-    "entertainment",
-    "films",
-    "streaming",
+    "фильмы",
+    "ТВ-шоу",
+    "кино",
+    "развлечения",
+    "фильмография",
+    "потоковое видео",
   ],
-  authors: [{ name: "Eco Movie" }],
-  creator: "Eco Movie",
-  publisher: "Eco Movie",
+  authors: [{ name: "EcoMovie" }],
+  creator: "EcoMovie",
+  publisher: "EcoMovie",
   formatDetection: {
     email: false,
     address: false,
@@ -52,26 +52,26 @@ export const metadata: Metadata = {
   },
   openGraph: {
     type: "website",
-    locale: "en_US",
+    locale: "ru_RU",
     url: "/",
-    siteName: "Eco Movie",
-    title: "Eco Movie - Discover Movies & TV Shows",
+    siteName: "EcoMovie",
+    title: "EcoMovie - Откройте Фильмы и ТВ-шоу",
     description:
-      "Discover millions of movies, TV shows and people. Explore trending, popular and top-rated content.",
+      "Откройте миллионы фильмов, ТВ-шоу и актёров. Исследуйте тренды, популярное и топ-рейтинговое содержание.",
     images: [
       {
         url: "/banner.webp",
         width: 1200,
         height: 630,
-        alt: "Eco Movie",
+        alt: "EcoMovie",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Eco Movie - Discover Movies & TV Shows",
+    title: "EcoMovie - Откройте Фильмы и ТВ-шоу",
     description:
-      "Discover millions of movies, TV shows and people. Explore trending, popular and top-rated content.",
+      "Откройте миллионы фильмов, ТВ-шоу и актёров. Исследуйте тренды, популярное и топ-рейтинговое содержание.",
     images: ["/banner.webp"],
   },
   robots: {
@@ -85,10 +85,6 @@ export const metadata: Metadata = {
       "max-snippet": -1,
     },
   },
-  verification: {
-    // Добавьте здесь ваш verification код для Google Search Console
-    // google: 'your-google-verification-code',
-  },
 };
 
 export default function RootLayout({
@@ -97,13 +93,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" prefix="og: https://ogp.me/ns#">
+    <html lang="ru" prefix="og: https://ogp.me/ns#">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
+        {/* Провайдер React Query для управления состоянием серверных данных */}
         <ReactQueryProvider>
+          {/* Заголовок приложения */}
           <Header />
+          {/* Основной контент страницы */}
           {children}
-          <ReactQueryDevtools initialIsOpen={false} />{" "}
-          {/* initialIsOpen={false} чтобы он не открывался сразу */}
+          {/* React Query devtools для отладки */}
+          <ReactQueryDevtools initialIsOpen={false} />
+          {/* Подвал приложения */}
           <Footer />
         </ReactQueryProvider>
       </body>

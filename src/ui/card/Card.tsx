@@ -6,6 +6,8 @@ import Image from "next/image";
 import scss from "./card.module.scss";
 import { buildStyles, CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
+import { formatDate, getRatingColor, formatRating } from "@/utils/formatters";
+import { getTmdbImageUrl } from "@/utils/apiClient";
 
 interface ICard {
   id: number;
@@ -23,60 +25,45 @@ interface CardProps {
   selected: "movie" | "tv";
 }
 
-const TMDB_IMAGE_BASE = "https://image.tmdb.org/t/p/w500";
-const PLACEHOLDER_IMAGE = "/placeholder-poster.jpg"; // добавьте placeholder в public
+// Константы
+const PLACEHOLDER_IMAGE = "/placeholder-poster.jpg";
 
-const getRatingColor = (rating: number): string => {
-  if (rating >= 7) return "#21d07a";
-  if (rating >= 5) return "#d2d531";
-  return "#db2360";
-};
-
-const formatDate = (dateString: string): string => {
-  if (!dateString || dateString === "N/A") return "N/A";
-  
-  try {
-    const date = new Date(dateString);
-    return date.toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-    });
-  } catch {
-    return dateString;
-  }
-};
-
+/**
+ * Компонент карточки фильма/шоу с изображением, рейтингом и информацией
+ */
 const Card = memo(({ movie, selected }: CardProps) => {
   const { push } = useRouter();
 
+  // Определяем отображаемое имя
   const displayTitle = useMemo(
     () => movie.title || movie.name || "Untitled",
     [movie.title, movie.name],
   );
 
+  // Форматируем дату
   const displayDate = useMemo(() => {
     const rawDate = movie.release_date || movie.first_air_date || "N/A";
     return formatDate(rawDate);
   }, [movie.release_date, movie.first_air_date]);
 
+  // Закругляем рейтинг
   const rating = useMemo(
-    () => Math.round((movie.vote_average || 0) * 10) / 10,
+    () => formatRating(movie.vote_average || 0),
     [movie.vote_average],
   );
 
+  // Получаем URL постера
   const posterUrl = useMemo(
-    () =>
-      movie.poster_path
-        ? `${TMDB_IMAGE_BASE}${movie.poster_path}`
-        : PLACEHOLDER_IMAGE,
+    () => getTmdbImageUrl(movie.poster_path) || PLACEHOLDER_IMAGE,
     [movie.poster_path],
   );
 
+  // Обработчик навигации
   const handleNavigate = useCallback(() => {
     push(`/${selected}/${movie.id}`);
   }, [push, selected, movie.id]);
 
+  // Обработчик клавиш
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent) => {
       if (e.key === "Enter" || e.key === " ") {
@@ -94,7 +81,7 @@ const Card = memo(({ movie, selected }: CardProps) => {
       role="button"
       tabIndex={0}
       onKeyDown={handleKeyDown}
-      aria-label={`View details for ${displayTitle}`}
+      aria-label={`Просмотр информации о ${displayTitle}`}
     >
       <div className={scss.imageWrapper}>
         <Image
@@ -105,13 +92,13 @@ const Card = memo(({ movie, selected }: CardProps) => {
           sizes="(max-width: 480px) 140px, (max-width: 768px) 160px, (max-width: 1024px) 180px, 220px"
           placeholder="blur"
           blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAUABQDASIAAhEBAxEB/8QAGAAAAwEBAAAAAAAAAAAAAAAAAAQFBgP/xAAjEAACAQQBBAMAAAAAAAAAAAABAgMABAUREiExQQYTIlFh/8QAFgEBAQEAAAAAAAAAAAAAAAAAAgAB/8QAGREAAwEBAQAAAAAAAAAAAAAAAAECERIh/9oADAMBAAIRAxEAPwDn5TkryLJbvG8kaAKGPfJ61z8dykl1mY/dZVt5ZpXLuU6x16VXuoIb/LwwSyO0jt3bvT+Hw4s7U3UcmIuLxz16lBU0rbdUTFppaA8hx/IJgfOYiU/F2BDgfprTkIUsgMjBAe/xqpo0dF+BH//Z"
-          // quality={85}
+          quality={75}
           loading="lazy"
           className={scss.poster}
         />
 
         {rating > 0 && (
-          <div className={scss.scale} aria-label={`Rating: ${rating} out of 10`}>
+          <div className={scss.scale} aria-label={`Рейтинг: ${rating} из 10`}>
             <CircularProgressbar
               value={rating}
               maxValue={10}
@@ -130,7 +117,10 @@ const Card = memo(({ movie, selected }: CardProps) => {
 
       <div className={scss.info}>
         <h3 className={scss.title}>{displayTitle}</h3>
-        <time className={scss.date} dateTime={movie.release_date || movie.first_air_date}>
+        <time
+          className={scss.date}
+          dateTime={movie.release_date || movie.first_air_date}
+        >
           {displayDate}
         </time>
       </div>

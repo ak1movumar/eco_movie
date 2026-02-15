@@ -1,10 +1,8 @@
-import AllTv from '@/components/pages/allTv/AllTv';
-import React from 'react';
+import AllTv from "@/components/pages/allTv/AllTv";
 
-const page = () => {
-    return (
-        <AllTv/>
-    );
-};
-
-export default page;
+/**
+ * Страница со всеми ТВ-шоу и фильтрацией
+ */
+export default function TvPage() {
+  return <AllTv />;
+}

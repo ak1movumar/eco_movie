@@ -4,46 +4,53 @@ import { FaDiscord, FaGithub, FaInstagram, FaLinkedin } from "react-icons/fa";
 import scss from "./footer.module.scss";
 import { SlSocialVkontakte } from "react-icons/sl";
 
+// Ссылки социальных сетей
 const SOCIAL_LINKS = [
   { Icon: FaDiscord, label: "Discord", href: "#" },
   { Icon: FaInstagram, label: "Instagram", href: "#" },
-  { Icon: SlSocialVkontakte, label: "VKontakte", href: "#" },
+  { Icon: SlSocialVkontakte, label: "ВКонтакте", href: "#" },
   { Icon: FaLinkedin, label: "LinkedIn", href: "#" },
   { Icon: FaGithub, label: "GitHub", href: "#" },
 ];
 
+/**
+ * Компонент подвала приложения с навигацией и социальными сетями
+ */
 export default function Footer() {
   return (
     <footer className={scss.container}>
       <div className="container">
         <div className={scss.mainContainer}>
+          {/* Навигационные ссылки */}
           <nav className={scss.tags}>
             <a href="#" rel="noopener noreferrer">
-              Terms Of Use
+              Условия использования
             </a>
             <a href="#" rel="noopener noreferrer">
-              Privacy Policy
+              Политика конфиденциальности
             </a>
             <a href="#" rel="noopener noreferrer">
-              About
+              О нас
             </a>
             <a href="#" rel="noopener noreferrer">
-              Blog
+              Блог
             </a>
             <a href="#" rel="noopener noreferrer">
-              FAQ
+              ЧастыеВопросы
             </a>
           </nav>
 
+          {/* Описание приложения */}
           <p>
-            EcoMovie - a unique website providing fascinating information about
-            movies and TV shows. Here you can discover all the necessary details
-            about your favorite films, actors, directors, ratings, and much
-            more. EcoMovie boasts a stylish and intuitive interface that makes
-            your search for cinematic masterpieces as convenient and enjoyable
-            as possible.
+            EcoMovie - уникальный веб-сайт, предоставляющий увлекательную
+            информацию о фильмах и телешоу. Здесь вы можете узнать все
+            необходимые детали о ваших любимых фильмах, актёрах, режиссёрах,
+            рейтингах и многом другом. EcoMovie обладает стильным и интуитивным
+            интерфейсом, который делает ваш поиск кинематографических шедевров
+            максимально удобным и приятным.
           </p>
 
+          {/* Иконки социальных сетей */}
           <div className={scss.icons}>
             {SOCIAL_LINKS.map(({ Icon, label, href }) => (
               <a

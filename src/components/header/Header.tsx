@@ -10,6 +10,9 @@ import { GoX } from "react-icons/go";
 
 const LOGO_URL = "https://movie.elcho.dev/assets/eco-movie-logo-a8_bjuTM.svg";
 
+/**
+ * Компонент заголовка приложения с навигацией и поиском
+ */
 const Header = () => {
   const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -17,6 +20,9 @@ const Header = () => {
   const router = useRouter();
   const pathname = usePathname();
 
+  /**
+   * Обработчик навигации с закрытием меню
+   */
   const handleNavigate = useCallback(
     (path: string) => {
       router.push(path);
@@ -25,8 +31,14 @@ const Header = () => {
     [router],
   );
 
-  const toggleMenu = useCallback(() => setIsMenuOpen((p) => !p), []);
+  /**
+   * Переключатель видимости меню
+   */
+  const toggleMenu = useCallback(() => setIsMenuOpen((prev) => !prev), []);
 
+  /**
+   * Обработчик поиска с валидацией
+   */
   const handleSearch = useCallback(
     (query: string) => {
       if (query.trim()) {
@@ -38,40 +50,53 @@ const Header = () => {
     [router],
   );
 
-  const handleSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
-      handleSearch(searchQuery);
-    }
-  };
+  /**
+   * Обработчик нажатия клавиши Enter в поле поиска
+   */
+  const handleSearchKeyDown = useCallback(
+    (e: React.KeyboardEvent<HTMLInputElement>) => {
+      if (e.key === "Enter") {
+        handleSearch(searchQuery);
+      }
+    },
+    [handleSearch, searchQuery],
+  );
 
-  // Close menu when route changes
+  // Закрываем меню при смене маршрута
   useEffect(() => {
     setIsMenuOpen(false);
   }, [pathname]);
 
-  // Close on Escape key and support Space to toggle
+  // Закрываем меню по клавише Escape
   useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setIsMenuOpen(false);
+    const handleEscapeKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setIsMenuOpen(false);
+        setIsSearchModalOpen(false);
+      }
     };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
+
+    window.addEventListener("keydown", handleEscapeKey);
+    return () => window.removeEventListener("keydown", handleEscapeKey);
   }, []);
 
   return (
     <header className={scss.header}>
       <div className="container">
         <div className={scss.mainContainer}>
-          {/* Mobile Menu Button */}
+          {/* Кнопка меню для мобильных устройств */}
           <span
             className={scss.menu}
             onClick={toggleMenu}
             role="button"
             tabIndex={0}
-            aria-label="Toggle menu"
+            aria-label="Переключить меню"
             aria-expanded={isMenuOpen}
             onKeyDown={(e) => {
-              if (e.key === "Enter" || e.key === " ") toggleMenu();
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                toggleMenu();
+              }
             }}
           >
             <div className={scss.iconWrapper}>
@@ -88,59 +113,74 @@ const Header = () => {
             </div>
           </span>
 
-          {/* Mobile Sidebar */}
+          {/* Мобильная боковая панель */}
           {isMenuOpen && (
-            <nav className={scss.sidebar} role="navigation">
+            <nav
+              className={scss.sidebar}
+              role="navigation"
+              aria-label="Мобильная навигация"
+            >
               <h2
                 onClick={() => handleNavigate("/movies")}
                 className={scss.navLink}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) =>
+                  e.key === "Enter" && handleNavigate("/movies")
+                }
               >
-                Movies
+                Фильмы
               </h2>
               <h2
                 onClick={() => handleNavigate("/tv")}
                 className={scss.navLink}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => e.key === "Enter" && handleNavigate("/tv")}
               >
-                TV Shows
+                ТВ-шоу
               </h2>
             </nav>
           )}
 
-          {/* Logo */}
+          {/* Логотип */}
           <div
             onClick={() => handleNavigate("/")}
             className={scss.left_header}
             role="button"
             tabIndex={0}
             onKeyDown={(e) => e.key === "Enter" && handleNavigate("/")}
+            aria-label="На главную страницу"
           >
-            <img src={LOGO_URL} alt="EcoMovie Logo" />
+            <img src={LOGO_URL} alt="EcoMovie Логотип" />
             <h2>EcoMovie</h2>
           </div>
 
-          {/* Desktop Navigation */}
+          {/* Компьютерная навигация */}
           <div className={scss.right_header}>
             <button
               onClick={() => handleNavigate("/movies")}
               className={scss.navLink}
+              aria-label="Перейти к фильмам"
             >
-              Movies
+              Фильмы
             </button>
             <button
               onClick={() => handleNavigate("/tv")}
               className={scss.navLink}
+              aria-label="Перейти к ТВ-шоу"
             >
-              TV Shows
+              ТВ-шоу
             </button>
             <button
               onClick={() => setIsSearchModalOpen(!isSearchModalOpen)}
               className={scss.searchButton}
-              aria-label="Open search"
+              aria-label="Открыть поиск"
             >
               <CiSearch />
             </button>
 
-            {/* Search Modal */}
+            {/* Модальное окно поиска */}
             {isSearchModalOpen && (
               <div
                 className={scss.modalOverlay}
@@ -154,7 +194,7 @@ const Header = () => {
                 >
                   <input
                     type="text"
-                    placeholder="Search movies or TV shows..."
+                    placeholder="Поиск фильмов или ТВ-шоу..."
                     className={scss.modalInput}
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
@@ -165,8 +205,9 @@ const Header = () => {
                     onClick={() => handleSearch(searchQuery)}
                     className={scss.searchBtn}
                     type="button"
+                    aria-label="Выполнить поиск"
                   >
-                    Search
+                    Поиск
                   </button>
                 </div>
               </div>
