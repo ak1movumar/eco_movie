@@ -63,7 +63,7 @@
   gap: 20px;
 }
 
-.movieTitle {
+.mediaTitle {
   font-size: 2.5rem;
   font-weight: 700;
   margin: 0;
@@ -170,7 +170,7 @@
   margin: 0;
 }
 
-.movieInfo {
+.mediaInfo {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 16px;
@@ -489,7 +489,7 @@
     gap: 30px;
   }
 
-  .movieTitle {
+  .mediaTitle {
     font-size: 2rem;
 
     .year {
@@ -521,7 +521,7 @@
     height: 330px;
   }
 
-  .movieTitle {
+  .mediaTitle {
     font-size: 1.8rem;
 
     .year {
@@ -537,7 +537,7 @@
     justify-content: center;
   }
 
-  .movieInfo {
+  .mediaInfo {
     grid-template-columns: 1fr;
   }
 
@@ -575,7 +575,7 @@
     height: 270px;
   }
 
-  .movieTitle {
+  .mediaTitle {
     font-size: 1.5rem;
 
     .year {

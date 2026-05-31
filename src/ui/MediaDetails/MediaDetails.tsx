@@ -5,10 +5,14 @@ import { IoClose } from "react-icons/io5";
 import scss from "./mediaDetails.module.scss";
 import { useEffect, useCallback, lazy, Suspense, useState } from "react";
 import Image from "next/image";
+import { motion } from "framer-motion";
 import DetailsSkeleton from "../detailsSkeleton/DetailsSkeleton";
 import CardSkeleton from "../cardSkeleton/CardSkeleton";
 
 const Card = lazy(() => import("../card/Card"));
+
+const FADE_UP = { hidden: { opacity: 0, y: 30 }, visible: { opacity: 1, y: 0 } };
+const FADE_TRANSITION = { duration: 0.45, ease: [0.25, 0.46, 0.45, 0.94] } as const;
 
 // Types
 interface Video {
@@ -184,15 +188,19 @@ export default function MediaDetails({
           priority
           quality={75}
           sizes="100vw"
-          unoptimized
           className={scss.backdropImage}
         />
         <div className={scss.backdropGradient} />
       </div>
 
       <div className="container">
-        {/* Main Content */}
-        <div className={scss.mainContent}>
+        <motion.div
+          className={scss.mainContent}
+          variants={FADE_UP}
+          transition={FADE_TRANSITION}
+          initial="hidden"
+          animate="visible"
+        >
           <div className={scss.posterWrapper}>
             <Image
               src={`${TMDB_IMAGE_BASE}/w500${media.poster_path}`}
@@ -201,13 +209,12 @@ export default function MediaDetails({
               height={450}
               quality={75}
               priority
-              unoptimized
               className={scss.poster}
             />
           </div>
 
           <div className={scss.details}>
-            <h1 className={scss.mediaTitle}>
+            <h1 className={scss.mediaTitle} style={{ margin: 0 }}>
               {title}
               <span className={scss.year}>({year})</span>
             </h1>
@@ -313,11 +320,18 @@ export default function MediaDetails({
               )}
             </div>
           </div>
-        </div>
+        </motion.div>
 
         {/* Official Videos */}
         {officialVideos.length > 0 && (
-          <section className={scss.section}>
+          <motion.section
+            className={scss.section}
+            variants={FADE_UP}
+            transition={FADE_TRANSITION}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-60px" }}
+          >
             <h2 className={scss.sectionHeading}>Official Videos</h2>
             <div className={scss.horizontalScroll}>
               {officialVideos.map((video) => (
@@ -342,7 +356,6 @@ export default function MediaDetails({
                       sizes="(max-width: 480px) 200px, (max-width: 768px) 240px, 280px"
                       quality={75}
                       loading="lazy"
-                      unoptimized
                     />
                     <div className={scss.playOverlay}>
                       <PiPlayCircle size={56} />
@@ -352,12 +365,19 @@ export default function MediaDetails({
                 </div>
               ))}
             </div>
-          </section>
+          </motion.section>
         )}
 
         {/* Top Cast */}
         {credits && credits.length > 0 && (
-          <section className={scss.section}>
+          <motion.section
+            className={scss.section}
+            variants={FADE_UP}
+            transition={FADE_TRANSITION}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-60px" }}
+          >
             <h2 className={scss.sectionHeading}>Top Cast</h2>
             <div className={scss.horizontalScroll}>
               {credits.slice(0, 20).map((actor) => (
@@ -374,7 +394,6 @@ export default function MediaDetails({
                       height={150}
                       quality={75}
                       loading="lazy"
-                      unoptimized
                     />
                   </div>
                   <h4 className={scss.castName}>{actor.name}</h4>
@@ -382,12 +401,19 @@ export default function MediaDetails({
                 </div>
               ))}
             </div>
-          </section>
+          </motion.section>
         )}
 
         {/* Similar */}
         {similar && similar.length > 0 && (
-          <section className={scss.section}>
+          <motion.section
+            className={scss.section}
+            variants={FADE_UP}
+            transition={FADE_TRANSITION}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-60px" }}
+          >
             <h2 className={scss.sectionHeading}>
               {mediaType === "movie" ? "Similar Movies" : "Similar Shows"}
             </h2>
@@ -398,12 +424,19 @@ export default function MediaDetails({
                 ))}
               </Suspense>
             </div>
-          </section>
+          </motion.section>
         )}
 
         {/* Recommendations */}
         {recommendations && recommendations.length > 0 && (
-          <section className={scss.section}>
+          <motion.section
+            className={scss.section}
+            variants={FADE_UP}
+            transition={FADE_TRANSITION}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-60px" }}
+          >
             <h2 className={scss.sectionHeading}>Recommendations</h2>
             <div className={scss.horizontalScroll}>
               <Suspense fallback={<CardSkeleton count={6} />}>
@@ -412,7 +445,7 @@ export default function MediaDetails({
                 ))}
               </Suspense>
             </div>
-          </section>
+          </motion.section>
         )}
       </div>
 

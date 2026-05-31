@@ -1,35 +1,25 @@
 "use client";
 
+import { useEffect } from "react";
 import { useOneMovie } from "@/hooks/oneMovie/useOneMovie";
-import { useMemo } from "react";
+import { MediaDetailsResponse } from "@/hooks/useMediaDetails";
 import MediaDetails from "../MediaDetails/MediaDetails";
 
 interface OneMovieProps {
   movieId: string;
+  initialData?: MediaDetailsResponse;
 }
 
-/**
- * Компонент для отображения полной информации о фильме
- */
-export default function OneMovie({ movieId }: OneMovieProps) {
-  const { data, isLoading, isError } = useOneMovie(movieId);
+export default function OneMovie({ movieId, initialData }: OneMovieProps) {
+  const { data, isLoading, isError } = useOneMovie(movieId, initialData);
 
-  // Преобразуем данные из формата хука в формат компонента MediaDetails
-  const adaptedData = useMemo(() => {
-    if (!data) return undefined;
-
-    return {
-      media: data.media,
-      credits: data.credits,
-      videos: data.videos,
-      similar: data.similar,
-      recommendations: data.recommendations,
-    };
-  }, [data]);
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "instant" });
+  }, [movieId]);
 
   return (
     <MediaDetails
-      data={adaptedData}
+      data={data}
       isLoading={isLoading}
       isError={isError}
       mediaType="movie"

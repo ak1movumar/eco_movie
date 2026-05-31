@@ -6,7 +6,6 @@ import { useMemo, useState, useEffect } from "react";
 import { FiArrowUp } from "react-icons/fi";
 import { useInView } from "react-intersection-observer";
 
-// Соответствие ID жанров TMDB с названиями
 const GENRES_MAP: Record<number, string> = {
   28: "Action",
   12: "Adventure",
@@ -16,6 +15,16 @@ const GENRES_MAP: Record<number, string> = {
   99: "Documentary",
   18: "Drama",
   10751: "Family",
+  14: "Fantasy",
+  36: "History",
+  27: "Horror",
+  10402: "Music",
+  9648: "Mystery",
+  10749: "Romance",
+  878: "Science Fiction",
+  53: "Thriller",
+  10752: "War",
+  37: "Western",
 };
 
 const GENRE_OPTIONS = Object.entries(GENRES_MAP).map(([id, name]) => ({
@@ -147,16 +156,11 @@ export default function Movies() {
             </div>
           </div>
 
-          {/* Сетка фильмов */}
-          <div className={scss.movies}>
-            <MoviesCard
-              isLoading={isLoading}
-              data={filteredAndSortedMovies}
-              title="Фильмы"
-              toggle="day | week"
-              selected="movie"
-            />
-          </div>
+          <MoviesCard
+            isLoading={isLoading}
+            data={filteredAndSortedMovies}
+            selected="movie"
+          />
 
           {/* Триггер для бесконечной прокрутки */}
           <div ref={ref} style={{ height: "20px", margin: "20px 0" }}>

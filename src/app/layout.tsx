@@ -5,7 +5,6 @@ import "swiper/css";
 import Header from "@/components/header/Header";
 import Footer from "@/components/footer/Footer";
 import ReactQueryProvider from "./providers/ReactQueryProvider";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -99,11 +98,7 @@ export default function RootLayout({
         <ReactQueryProvider>
           {/* Заголовок приложения */}
           <Header />
-          {/* Основной контент страницы */}
           {children}
-          {/* React Query devtools для отладки */}
-          <ReactQueryDevtools initialIsOpen={false} />
-          {/* Подвал приложения */}
           <Footer />
         </ReactQueryProvider>
       </body>

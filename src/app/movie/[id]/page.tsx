@@ -1,67 +1,53 @@
 import OneMovie from "@/ui/oneMovie/OneMovie";
 import type { Metadata } from "next";
-import axios from "axios";
-import { API_KEY } from "@/constants/api";
+import { unstable_cache } from "next/cache";
+import { API_KEY, BASE_HOST } from "@/constants/api";
+import { fetchMediaData } from "@/lib/fetchMediaData";
+import type { MediaDetailsResponse } from "@/lib/fetchMediaData";
 
-async function getMovieData(id: string) {
-  const fetchWithRetry = async (url: string, maxRetries = 3): Promise<any> => {
-    for (let i = 0; i < maxRetries; i++) {
-      try {
-        return await axios.get(url, { timeout: 10000 });
-      } catch (error) {
-        if (i === maxRetries - 1) throw error;
-        await new Promise((resolve) =>
-          setTimeout(resolve, Math.pow(2, i) * 1000),
-        );
-      }
-    }
-    throw new Error("Max retries exceeded");
-  };
-
+// Pre-render top popular + top-rated at build time
+export async function generateStaticParams() {
   try {
-    const [movie, credits, videos] = await Promise.all([
-      fetchWithRetry(
-        `https://api.themoviedb.org/3/movie/${id}?api_key=${API_KEY}&language=en-US`,
-      ),
-      fetchWithRetry(
-        `https://api.themoviedb.org/3/movie/${id}/credits?api_key=${API_KEY}&language=en-US`,
-      ),
-      fetchWithRetry(
-        `https://api.themoviedb.org/3/movie/${id}/videos?api_key=${API_KEY}&language=en-US`,
-      ),
+    const [popular, topRated] = await Promise.all([
+      fetch(`${BASE_HOST}/movie/popular?api_key=${API_KEY}&language=en-US&page=1`).then((r) => r.json()),
+      fetch(`${BASE_HOST}/movie/top_rated?api_key=${API_KEY}&language=en-US&page=1`).then((r) => r.json()),
     ]);
-
-    return {
-      movie: movie?.data || {},
-      credits: credits?.data?.cast ? credits.data.cast.slice(0, 8) : [],
-      videos: videos?.data?.results || [],
-    };
-  } catch (error) {
-    console.error("Ошибка загрузки данных фильма:", error);
-    return null;
+    const all = [...(popular.results || []), ...(topRated.results || [])];
+    const seen = new Set<string>();
+    return all.reduce<{ id: string }[]>((acc, m) => {
+      const id = String(m.id);
+      if (!seen.has(id)) { seen.add(id); acc.push({ id }); }
+      return acc;
+    }, []);
+  } catch {
+    return [];
   }
 }
+
+// Non-pre-generated pages are still generated on demand
+export const dynamicParams = true;
+
+// Server-side cache shared between generateMetadata and Page (1 hour TTL)
+const getMovieData = unstable_cache(
+  (id: string) => fetchMediaData(id, "movie").catch(() => null as MediaDetailsResponse | null),
+  ["movie-details"],
+  { revalidate: 3600 },
+);
 
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ id: string }>; // ✅ Изменено на Promise
+  params: Promise<{ id: string }>;
 }): Promise<Metadata> {
-  const { id } = await params; // ✅ Добавлен await
+  const { id } = await params;
   const data = await getMovieData(id);
+  if (!data) return { title: "Movie Not Found" };
 
-  if (!data || !data.movie) {
-    return {
-      title: "Movie Not Found",
-      description: "The requested movie could not be found.",
-    };
-  }
-
-  const { movie } = data;
+  const movie = data.media;
   const title = `${movie.title} (${movie.release_date?.split("-")[0] || ""})`;
   const description =
     movie.overview ||
-    `Watch ${movie.title}, a ${movie.genres?.map((g: any) => g.name).join(", ") || "movie"} released in ${movie.release_date?.split("-")[0] || ""}.`;
+    `Watch ${movie.title}, a ${movie.genres?.map((g: any) => g.name).join(", ") || "movie"}.`;
   const imageUrl = movie.backdrop_path
     ? `https://image.tmdb.org/t/p/original${movie.backdrop_path}`
     : movie.poster_path
@@ -71,82 +57,53 @@ export async function generateMetadata({
   return {
     title,
     description,
-    keywords: [
-      movie.title,
-      ...(movie.genres?.map((g: any) => g.name) || []),
-      "movie",
-      "cinema",
-      "film",
-    ],
+    keywords: [movie.title, ...(movie.genres?.map((g: any) => g.name) || []), "movie", "film"],
     openGraph: {
       title,
       description,
       type: "video.movie",
-      images: [
-        {
-          url: imageUrl,
-          width: 1200,
-          height: 630,
-          alt: movie.title,
-        },
-      ],
+      images: [{ url: imageUrl, width: 1200, height: 630, alt: movie.title }],
       releaseDate: movie.release_date,
       duration: movie.runtime,
-      actors: data.credits.map((actor: any) => actor.name),
+      actors: data.credits.map((a: any) => a.name),
     },
-    twitter: {
-      card: "summary_large_image",
-      title,
-      description,
-      images: [imageUrl],
-    },
-    other: {
-      "rating:value": movie.vote_average?.toFixed(1) || "0",
-      "rating:scale": "10",
-    },
+    twitter: { card: "summary_large_image", title, description, images: [imageUrl] },
+    other: { "rating:value": movie.vote_average?.toFixed(1) || "0", "rating:scale": "10" },
   };
 }
 
 export default async function Page({
   params,
 }: {
-  params: Promise<{ id: string }>; // ✅ Изменено на Promise
+  params: Promise<{ id: string }>;
 }) {
-  const { id } = await params; // ✅ Добавлен await
+  const { id } = await params;
   const data = await getMovieData(id);
 
-  // Structured Data (JSON-LD) для SEO
-  const structuredData =
-    data && data.movie
-      ? {
-          "@context": "https://schema.org",
-          "@type": "Movie",
-          name: data.movie.title,
-          description: data.movie.overview,
-          image: data.movie.backdrop_path
-            ? `https://image.tmdb.org/t/p/original${data.movie.backdrop_path}`
-            : data.movie.poster_path
-              ? `https://image.tmdb.org/t/p/original${data.movie.poster_path}`
-              : undefined,
-          datePublished: data.movie.release_date,
-          genre: data.movie.genres?.map((g: any) => g.name) || [],
-          aggregateRating: data.movie.vote_average
-            ? {
-                "@type": "AggregateRating",
-                ratingValue: data.movie.vote_average,
-                bestRating: 10,
-                worstRating: 0,
-                ratingCount: data.movie.vote_count || 0,
-              }
-            : undefined,
-          duration: data.movie.runtime ? `PT${data.movie.runtime}M` : undefined,
-          actor: data.credits.map((actor: any) => ({
-            "@type": "Person",
-            name: actor.name,
-            characterName: actor.character,
-          })),
-        }
-      : null;
+  const structuredData = data?.media
+    ? {
+        "@context": "https://schema.org",
+        "@type": "Movie",
+        name: data.media.title,
+        description: data.media.overview,
+        image: data.media.backdrop_path
+          ? `https://image.tmdb.org/t/p/original${data.media.backdrop_path}`
+          : undefined,
+        datePublished: data.media.release_date,
+        genre: data.media.genres?.map((g: any) => g.name) || [],
+        aggregateRating: data.media.vote_average
+          ? {
+              "@type": "AggregateRating",
+              ratingValue: data.media.vote_average,
+              bestRating: 10,
+              worstRating: 0,
+              ratingCount: data.media.vote_count || 0,
+            }
+          : undefined,
+        duration: data.media.runtime ? `PT${data.media.runtime}M` : undefined,
+        actor: data.credits.map((a: any) => ({ "@type": "Person", name: a.name })),
+      }
+    : null;
 
   return (
     <>
@@ -156,7 +113,7 @@ export default async function Page({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
         />
       )}
-      <OneMovie movieId={id} />
+      <OneMovie movieId={id} initialData={data ?? undefined} />
     </>
   );
 }

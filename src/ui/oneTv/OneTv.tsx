@@ -1,35 +1,25 @@
 "use client";
 
+import { useEffect } from "react";
 import { useOneTv } from "@/hooks/oneTv/useOneTv";
-import { useMemo } from "react";
+import { MediaDetailsResponse } from "@/hooks/useMediaDetails";
 import MediaDetails from "../MediaDetails/MediaDetails";
 
 interface OneTvProps {
   tvId: string;
+  initialData?: MediaDetailsResponse;
 }
 
-/**
- * Компонент для отображения полной информации о ТВ-шоу
- */
-export default function OneTv({ tvId }: OneTvProps) {
-  const { data, isLoading, isError } = useOneTv(tvId);
+export default function OneTv({ tvId, initialData }: OneTvProps) {
+  const { data, isLoading, isError } = useOneTv(tvId, initialData);
 
-  // Преобразуем данные из формата хука в формат компонента MediaDetails
-  const adaptedData = useMemo(() => {
-    if (!data) return undefined;
-
-    return {
-      media: data.media,
-      credits: data.credits,
-      videos: data.videos,
-      similar: data.similar,
-      recommendations: data.recommendations,
-    };
-  }, [data]);
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "instant" });
+  }, [tvId]);
 
   return (
     <MediaDetails
-      data={adaptedData}
+      data={data}
       isLoading={isLoading}
       isError={isError}
       mediaType="tv"

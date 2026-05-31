@@ -1,201 +1,138 @@
 "use client";
 
 import React, { useState, useCallback, useEffect } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useRouter } from "next/navigation";
+import { motion, AnimatePresence } from "framer-motion";
 import scss from "./header.module.scss";
 import { CiSearch } from "react-icons/ci";
-import { useRouter } from "next/navigation";
-import { usePathname } from "next/navigation";
 import { IoMdMenu } from "react-icons/io";
 import { GoX } from "react-icons/go";
 
 const LOGO_URL = "https://movie.elcho.dev/assets/eco-movie-logo-a8_bjuTM.svg";
 
-/**
- * Компонент заголовка приложения с навигацией и поиском
- */
+
 const Header = () => {
-  const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const router = useRouter();
   const pathname = usePathname();
+  const router = useRouter();
 
-  /**
-   * Обработчик навигации с закрытием меню
-   */
-  const handleNavigate = useCallback(
-    (path: string) => {
-      router.push(path);
-      setIsMenuOpen(false);
-    },
-    [router],
-  );
+  const closeAll = useCallback(() => {
+    setIsMenuOpen(false);
+    setIsSearchOpen(false);
+  }, []);
 
-  /**
-   * Переключатель видимости меню
-   */
-  const toggleMenu = useCallback(() => setIsMenuOpen((prev) => !prev), []);
-
-  /**
-   * Обработчик поиска с валидацией
-   */
   const handleSearch = useCallback(
     (query: string) => {
       if (query.trim()) {
         router.push(`/search/${encodeURIComponent(query.trim())}`);
-        setIsSearchModalOpen(false);
+        setIsSearchOpen(false);
         setSearchQuery("");
       }
     },
     [router],
   );
 
-  /**
-   * Обработчик нажатия клавиши Enter в поле поиска
-   */
   const handleSearchKeyDown = useCallback(
     (e: React.KeyboardEvent<HTMLInputElement>) => {
-      if (e.key === "Enter") {
-        handleSearch(searchQuery);
-      }
+      if (e.key === "Enter") handleSearch(searchQuery);
     },
     [handleSearch, searchQuery],
   );
 
-  // Закрываем меню при смене маршрута
-  useEffect(() => {
-    setIsMenuOpen(false);
-  }, [pathname]);
+  // Close menu on route change
+  useEffect(() => { setIsMenuOpen(false); }, [pathname]);
 
-  // Закрываем меню по клавише Escape
+  // Close on Escape
   useEffect(() => {
-    const handleEscapeKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        setIsMenuOpen(false);
-        setIsSearchModalOpen(false);
-      }
-    };
-
-    window.addEventListener("keydown", handleEscapeKey);
-    return () => window.removeEventListener("keydown", handleEscapeKey);
-  }, []);
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") closeAll(); };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [closeAll]);
 
   return (
     <header className={scss.header}>
       <div className="container">
         <div className={scss.mainContainer}>
-          {/* Кнопка меню для мобильных устройств */}
-          <span
+          {/* Mobile menu toggle */}
+          <button
             className={scss.menu}
-            onClick={toggleMenu}
-            role="button"
-            tabIndex={0}
-            aria-label="Переключить меню"
+            onClick={() => setIsMenuOpen((p) => !p)}
+            aria-label="Открыть меню"
             aria-expanded={isMenuOpen}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" || e.key === " ") {
-                e.preventDefault();
-                toggleMenu();
-              }
-            }}
           >
             <div className={scss.iconWrapper}>
-              <IoMdMenu
-                className={`${scss.icon} ${scss.menuIcon} ${
-                  isMenuOpen ? scss.hidden : ""
-                }`}
-              />
-              <GoX
-                className={`${scss.icon} ${scss.closeIcon} ${
-                  isMenuOpen ? scss.visible : ""
-                }`}
-              />
+              <IoMdMenu className={`${scss.icon} ${scss.menuIcon} ${isMenuOpen ? scss.hidden : ""}`} />
+              <GoX className={`${scss.icon} ${scss.closeIcon} ${isMenuOpen ? scss.visible : ""}`} />
             </div>
-          </span>
+          </button>
 
-          {/* Мобильная боковая панель */}
-          {isMenuOpen && (
-            <nav
-              className={scss.sidebar}
-              role="navigation"
-              aria-label="Мобильная навигация"
-            >
-              <h2
-                onClick={() => handleNavigate("/movies")}
-                className={scss.navLink}
-                role="button"
-                tabIndex={0}
-                onKeyDown={(e) =>
-                  e.key === "Enter" && handleNavigate("/movies")
-                }
+          {/* Mobile sidebar */}
+          <AnimatePresence>
+            {isMenuOpen && (
+              <motion.nav
+                className={scss.sidebar}
+                initial={{ x: "-100%", opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                exit={{ x: "-100%", opacity: 0 }}
+                transition={{ type: "spring", stiffness: 300, damping: 30 } as any}
+                aria-label="Мобильная навигация"
               >
-                Фильмы
-              </h2>
-              <h2
-                onClick={() => handleNavigate("/tv")}
-                className={scss.navLink}
-                role="button"
-                tabIndex={0}
-                onKeyDown={(e) => e.key === "Enter" && handleNavigate("/tv")}
-              >
-                ТВ-шоу
-              </h2>
-            </nav>
-          )}
+                <Link href="/movies" className={scss.navLink} onClick={closeAll}>
+                  Фильмы
+                </Link>
+                <Link href="/tv" className={scss.navLink} onClick={closeAll}>
+                  ТВ-шоу
+                </Link>
+              </motion.nav>
+            )}
+          </AnimatePresence>
 
-          {/* Логотип */}
-          <div
-            onClick={() => handleNavigate("/")}
-            className={scss.left_header}
-            role="button"
-            tabIndex={0}
-            onKeyDown={(e) => e.key === "Enter" && handleNavigate("/")}
-            aria-label="На главную страницу"
-          >
-            <img src={LOGO_URL} alt="EcoMovie Логотип" />
-            <h2>EcoMovie</h2>
-          </div>
+          {/* Logo */}
+          <Link href="/" className={scss.left_header} aria-label="На главную страницу">
+            <img src={LOGO_URL} alt="EcoMovie" />
+            <span className={scss.logoText}>EcoMovie</span>
+          </Link>
 
-          {/* Компьютерная навигация */}
-          <div className={scss.right_header}>
-            <button
-              onClick={() => handleNavigate("/movies")}
-              className={scss.navLink}
-              aria-label="Перейти к фильмам"
+          {/* Desktop navigation */}
+          <nav className={scss.right_header} aria-label="Основная навигация">
+            <Link
+              href="/movies"
+              className={`${scss.navLink} ${pathname === "/movies" ? scss.active : ""}`}
             >
               Фильмы
-            </button>
-            <button
-              onClick={() => handleNavigate("/tv")}
-              className={scss.navLink}
-              aria-label="Перейти к ТВ-шоу"
+            </Link>
+            <Link
+              href="/tv"
+              className={`${scss.navLink} ${pathname === "/tv" ? scss.active : ""}`}
             >
               ТВ-шоу
-            </button>
+            </Link>
             <button
-              onClick={() => setIsSearchModalOpen(!isSearchModalOpen)}
+              onClick={() => setIsSearchOpen((p) => !p)}
               className={scss.searchButton}
               aria-label="Открыть поиск"
             >
               <CiSearch />
             </button>
 
-            {/* Модальное окно поиска */}
-            {isSearchModalOpen && (
-              <div
-                className={scss.modalOverlay}
-                onClick={() => setIsSearchModalOpen(false)}
-                role="dialog"
-                aria-modal="true"
-              >
-                <div
-                  className={scss.modalContent}
-                  onClick={(e) => e.stopPropagation()}
+            {/* Search dropdown */}
+            <AnimatePresence>
+              {isSearchOpen && (
+                <motion.div
+                  className={scss.searchDropdown}
+                  initial={{ opacity: 0, y: -8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -8 }}
+                  transition={{ duration: 0.18 }}
                 >
                   <input
                     type="text"
                     placeholder="Поиск фильмов или ТВ-шоу..."
-                    className={scss.modalInput}
+                    className={scss.searchInput}
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     onKeyDown={handleSearchKeyDown}
@@ -205,14 +142,13 @@ const Header = () => {
                     onClick={() => handleSearch(searchQuery)}
                     className={scss.searchBtn}
                     type="button"
-                    aria-label="Выполнить поиск"
                   >
                     Поиск
                   </button>
-                </div>
-              </div>
-            )}
-          </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </nav>
         </div>
       </div>
     </header>

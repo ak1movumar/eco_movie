@@ -6,16 +6,23 @@ import MoviesCard from "@/ui/moviesCard/MoviesCard";
 import { FiArrowUp } from "react-icons/fi";
 import { useInView } from "react-intersection-observer";
 
-// Соответствие ID жанров TMDB с названиями
 const GENRES_MAP: Record<number, string> = {
-  28: "Action",
-  12: "Adventure",
+  10759: "Action & Adventure",
   16: "Animation",
   35: "Comedy",
   80: "Crime",
   99: "Documentary",
   18: "Drama",
   10751: "Family",
+  10762: "Kids",
+  9648: "Mystery",
+  10763: "News",
+  10764: "Reality",
+  10765: "Sci-Fi & Fantasy",
+  10766: "Soap",
+  10767: "Talk",
+  10768: "War & Politics",
+  37: "Western",
 };
 
 const GENRE_OPTIONS = Object.entries(GENRES_MAP).map(([id, name]) => ({
@@ -135,16 +142,11 @@ export default function AllTv() {
             </div>
           </div>
 
-          {/* Сетка ТВ-шоу */}
-          <div className={scss.movies}>
-            <MoviesCard
-              isLoading={isLoading}
-              data={filteredAndSortedTv}
-              title="ТВ-шоу"
-              toggle="day | week"
-              selected="tv"
-            />
-          </div>
+          <MoviesCard
+            isLoading={isLoading}
+            data={filteredAndSortedTv}
+            selected="tv"
+          />
 
           {/* Триггер для бесконечной прокрутки */}
           <div ref={ref} style={{ height: "20px", margin: "20px 0" }}>
