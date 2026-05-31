@@ -38,12 +38,11 @@
     max-width: 640px;
   }
   @media (max-width: 640px) {
-    max-width: 475px;
-    padding: 0;
+    max-width: 100%;
+    padding: 0 16px;
   }
-  @media (max-width: 475px) {
-    max-width: 340px;
-    padding: 0;
+  @media (max-width: 375px) {
+    padding: 0 12px;
   }
 }
 body {

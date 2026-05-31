@@ -1,107 +1,106 @@
 .container {
   background: var(--color-bg-alt, #04152d);
-  padding: 48px 0 24px 0;
+  padding: 48px 0 24px;
   color: var(--color-text-primary, #fff);
+  margin-top: auto;
+
   .mainContainer {
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
-    gap: 30px;
+    gap: 28px;
+
     p {
       text-align: center;
       color: #bbbbce;
-      font-size: 1.03rem;
+      font-size: 1rem;
+      max-width: 600px;
+      line-height: 1.6;
     }
+
     .tags {
       display: flex;
       flex-wrap: wrap;
-      gap: 24px;
+      gap: 20px;
       justify-content: center;
+
       a {
         color: #b0b0ff;
         font-weight: 500;
-        position: relative;
+        font-size: 0.95rem;
         transition: color 0.2s;
         white-space: nowrap;
+
         &:hover {
           color: var(--color-accent2, #da2f68);
         }
       }
     }
+
     .icons {
       display: flex;
-      gap: 24px;
+      gap: 16px;
       flex-wrap: wrap;
       justify-content: center;
-      span {
-        width: 46px;
-        height: 46px;
+
+      // Fix: component renders <a> tags, not <span>
+      a {
+        width: 44px;
+        height: 44px;
         display: flex;
         justify-content: center;
         align-items: center;
         border-radius: 50%;
-        background: #191b22cc;
+        background: rgba(25, 27, 34, 0.8);
         color: #fff;
-        font-size: 1.45rem;
-        transition:
-          background 0.25s,
-          color 0.2s,
-          transform 0.2s;
-        cursor: pointer;
+        font-size: 1.35rem;
+        text-decoration: none;
+        transition: background 0.25s, transform 0.2s;
+
         &:hover {
           background: var(--color-btn-hover, #da2f68);
-          color: #fff;
-          transform: scale(1.1);
+          transform: scale(1.12);
         }
       }
     }
   }
-  @media (max-width: 700px) {
-    padding: 32px 0 16px 0;
+
+  @media (max-width: 768px) {
+    padding: 36px 0 20px;
+
     .mainContainer {
-      gap: 18px;
-      p {
-        font-size: 0.9rem;
-        line-height: 1.5;
-      }
+      gap: 20px;
+
+      p { font-size: 0.9rem; }
+
       .tags {
-        gap: 8px 12px;
-        a {
-          font-size: 0.85rem;
-        }
+        gap: 10px 16px;
+        a { font-size: 0.85rem; }
       }
+
       .icons {
         gap: 12px;
-        span {
-          width: 36px;
-          height: 36px;
-          font-size: 1.2rem;
-        }
+        a { width: 40px; height: 40px; font-size: 1.2rem; }
       }
     }
   }
+
   @media (max-width: 480px) {
-    padding: 24px 0 12px 0;
+    padding: 28px 0 16px;
+
     .mainContainer {
-      gap: 14px;
-      p {
-        font-size: 0.8rem;
-        line-height: 1.4;
-      }
+      gap: 16px;
+
+      p { font-size: 0.82rem; }
+
       .tags {
-        gap: 6px 8px;
-        a {
-          font-size: 0.75rem;
-        }
+        gap: 6px 12px;
+        a { font-size: 0.78rem; }
       }
+
       .icons {
         gap: 10px;
-        span {
-          width: 32px;
-          height: 32px;
-          font-size: 1rem;
-        }
+        a { width: 36px; height: 36px; font-size: 1.1rem; }
       }
     }
   }
